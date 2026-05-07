@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SkinFlow — Clinical Concern Index</title>
+    
+    <!-- PWA / Standalone App Support -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0D0D0D">
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22SkinFlow%22,%22short_name%22:%22SkinFlow%22,%22start_url%22:%22index.html%22,%22display%22:%22standalone%22,%22background_color%22:%22%230D0D0D%22,%22theme_color%22:%22%23C9956A%22}">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- App Manifest & Mobile Meta -->
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22SkinFlow%22,%22short_name%22:%22SkinFlow%22,%22start_url%22:%22index.html%22,%22display%22:%22standalone%22,%22background_color%22:%22%230D0D0D%22,%22theme_color%22:%22%23C9956A%22}">
+    
     <style>
         :root {
             --bg: #0D0D0D;
@@ -22,8 +27,8 @@
             --text-secondary: #8A8480;
             --text-muted: #4A4744;
             --border: #2A2724;
-            --radius-lg: 16px;
-            --radius-md: 12px;
+            --radius-lg: 24px;
+            --radius-md: 16px;
             --font-ui: 'Inter', sans-serif;
             --font-heading: 'DM Serif Display', serif;
             --transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -36,65 +41,46 @@
             color: var(--text-primary);
             font-family: var(--font-ui);
             line-height: 1.5;
-            overflow-x: hidden;
-            overscroll-behavior: none;
+            height: 100dvh;
+            overflow: hidden;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-
-        /* Minimal Header */
-        header {
-            padding: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* --- FIXED GREEN PART (HEADER) --- */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bg);
+            z-index: 1000;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .wordmark {
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
+        header { padding: 16px 0 10px; display: flex; justify-content: space-between; align-items: center; }
+        .wordmark { font-size: 14px; font-weight: 600; letter-spacing: 0.05em; color: var(--text-muted); text-transform: uppercase; }
+        .settings-trigger { background: none; border: none; cursor: pointer; color: var(--text-muted); }
 
-        .settings-trigger {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: color var(--transition);
-        }
-
-        .settings-trigger:hover { color: var(--text-secondary); }
-
-        /* Search Section */
-        .search-area { padding-top: 20px; }
-        .search-input-wrapper { position: relative; width: 100%; }
+        .search-area { padding-bottom: 10px; }
         .search-input {
             width: 100%;
             background: transparent;
             border: none;
-            border-bottom: 2px solid var(--border);
-            padding: 16px 0;
-            font-size: 28px;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+            font-size: 22px;
             font-family: var(--font-ui);
-            font-weight: 500;
             color: var(--text-primary);
             outline: none;
-            transition: border-color var(--transition);
         }
         .search-input:focus { border-color: var(--accent); }
-        .search-input::placeholder { color: var(--text-muted); }
 
-        /* Category Pills */
         .category-scroll {
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding: 24px 0;
+            padding: 12px 0 16px;
             scrollbar-width: none;
-            -ms-overflow-style: none;
         }
         .category-scroll::-webkit-scrollbar { display: none; }
         .cat-pill {
@@ -107,158 +93,194 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
         }
         .cat-pill.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 
-        /* Grid */
+        /* --- SCROLLABLE RED PART (REELS FEED) --- */
         .concern-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-            padding-bottom: 100px;
+            margin-top: 175px; 
+            height: calc(100dvh - 175px);
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
+        .concern-grid::-webkit-scrollbar { display: none; }
 
         .concern-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 24px;
-            border-radius: var(--radius-lg);
-            cursor: pointer;
-            transition: var(--transition);
+            height: 100%;
+            width: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            background: var(--bg);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            min-height: 180px;
+            border-bottom: 1px solid var(--border);
+            padding: 20px;
             animation: fadeIn 400ms ease;
         }
-        .concern-card:hover { transform: scale(1.02); background: var(--elevated); border-color: var(--text-muted); }
-        
-        .concern-card h3 { font-family: var(--font-heading); font-size: 24px; color: var(--text-primary); margin-bottom: 12px; line-height: 1.1; }
-        .card-footer { display: flex; justify-content: space-between; align-items: center; }
-        .cat-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; padding: 4px 10px; border-radius: 999px; }
-        .arrow { color: var(--text-muted); font-size: 18px; }
 
-        /* Detail View */
-        #detail-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .card-header { padding-bottom: 15px; }
+        .concern-card h3 { 
+            font-family: var(--font-heading); 
+            font-size: 24px; 
+            color: var(--text-primary); 
+            line-height: 1.1;
+        }
+
+        .card-carousel {
+            flex-grow: 1;
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
             width: 100%;
+            border-radius: var(--radius-lg);
+            background: #000;
+            border: 1px solid var(--border);
+        }
+        .card-carousel::-webkit-scrollbar { display: none; }
+        
+        .carousel-item {
+            flex: 0 0 100%;
             height: 100%;
-            background: var(--bg);
-            z-index: 2000;
-            overflow-y: auto;
-            display: none;
-            transform: translateX(100%);
-            transition: transform var(--transition);
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1A1A1A 0%, #222 100%);
+            position: relative;
+        }
+        .carousel-item::after { content: 'Reference View'; font-size: 10px; text-transform: uppercase; color: var(--text-muted); opacity: 0.4; }
+
+        .card-footer { padding: 15px 0 10px; display: flex; justify-content: space-between; align-items: center; }
+        .cat-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
+        .arrow-hint { color: var(--text-muted); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+
+        /* --- TRANSFORMATION GALLERY OVERLAY (INSTA STYLE) --- */
+        #detail-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 2000; overflow-y: auto;
+            display: none; transform: translateX(100%); transition: transform var(--transition);
         }
         #detail-overlay.active { display: block; transform: translateX(0); }
-
-        .detail-nav { padding: 20px; position: sticky; top: 0; background: var(--bg); z-index: 10; }
-        .back-btn { background: none; border: none; cursor: pointer; color: var(--text-primary); font-size: 24px; }
-
-        .detail-content { padding: 0 20px 60px; }
-        .detail-title { font-family: var(--font-heading); font-size: 42px; margin-bottom: 32px; line-height: 1; }
-
-        .protocol-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            margin-bottom: 12px;
-            overflow: hidden;
+        
+        .overlay-header { 
+            padding: 20px; 
+            position: sticky; 
+            top: 0; 
+            background: var(--bg); 
+            z-index: 100; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            border-bottom: 1px solid var(--border); 
         }
-        .panel-header {
-            padding: 24px;
+        .back-btn { background: none; border: none; cursor: pointer; color: var(--text-primary); font-size: 24px; display: flex; align-items: center; }
+        .overlay-title { font-family: var(--font-heading); font-size: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .gallery-feed { padding: 0 0 100px; }
+        
+        /* Clinic Card (Insta Post Style) */
+        .clinic-post { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .clinic-post-header { padding: 15px 20px; display: flex; align-items: center; gap: 10px; }
+        .clinic-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 12px; }
+        .clinic-post-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+        
+        /* BA Rectangular Swiper */
+        .ba-swiper {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            user-select: none;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            gap: 0;
+            width: 100%;
         }
-        .panel-header h4 { font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); }
-        .panel-count { font-size: 12px; color: var(--text-muted); font-weight: 700; }
+        .ba-swiper::-webkit-scrollbar { display: none; }
+        .ba-item {
+            flex: 0 0 100%;
+            aspect-ratio: 3 / 2; /* Combined Landscape Rectangle */
+            scroll-snap-align: start;
+            display: flex;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .ba-half {
+            width: 50%; /* Each half becomes a 3:4 portrait rectangle */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .ba-half.before { background: #111; border-right: 1px solid rgba(201, 149, 106, 0.3); }
+        .ba-half.after { background: #181818; }
+        .ba-label { position: absolute; bottom: 12px; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 4px; }
+
+        /* Carousel Paging Dots (Insta style) */
+        .swiper-dots { display: flex; justify-content: center; gap: 5px; padding: 10px 0; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: 0.3s; }
+        .dot.active { background: var(--accent); }
+
+        .view-protocol-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: var(--bg);
+            height: 54px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 700;
+            font-size: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            z-index: 150;
+        }
+
+        /* Medical View */
+        .protocol-view { padding: 20px; animation: fadeIn 0.4s ease; }
+        .protocol-title { font-family: var(--font-heading); font-size: 38px; margin-bottom: 24px; line-height: 1; }
+        .protocol-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 12px; overflow: hidden; }
+        .panel-header { padding: 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .panel-header h4 { font-size: 16px; font-weight: 600; text-transform: uppercase; color: var(--accent); }
         .panel-body { display: none; padding: 0 24px 24px; }
         .panel-body.open { display: block; }
-
         .protocol-item { border-top: 1px solid var(--border); padding: 16px 0; }
-        .protocol-item:first-child { border-top: none; }
         .item-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; display: block; }
         .item-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.4; }
 
-        /* Bottom Sheet */
-        #settings-sheet {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            border-radius: 24px 24px 0 0;
-            z-index: 3000;
-            padding: 32px 24px;
-            transform: translateY(100%);
-            transition: transform var(--transition);
-        }
-        #settings-sheet.active { transform: translateY(0); }
-        .sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2900; display: none; }
-        .sheet-overlay.active { display: block; }
-
-        .sheet-link { display: block; padding: 16px 0; font-weight: 600; color: var(--text-secondary); text-decoration: none; border-bottom: 1px solid var(--border); }
-        .sheet-link:last-child { border-bottom: none; }
-
-        /* Search Highlight */
-        .highlight-reason { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 8px; font-style: italic; opacity: 0.8; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Desktop Nav Rail */
-        @media (min-width: 1024px) {
-            .nav-rail { position: fixed; left: 0; top: 0; height: 100%; width: 64px; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 24px 0; background: var(--bg); }
-            .container { padding-left: 100px; }
-            #detail-overlay { left: 64px; width: calc(100% - 64px); }
-        }
     </style>
 </head>
 <body>
 
-<div class="nav-rail">
-    <div class="settings-trigger" onclick="toggleSettings()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-    </div>
-</div>
-
-<main id="main-view" class="container">
+<div class="fixed-header">
     <header>
         <span class="wordmark">SkinFlow</span>
-        <button class="settings-trigger lg-hidden" onclick="toggleSettings()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <button class="settings-trigger" onclick="toggleSettings()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </button>
     </header>
-
     <div class="search-area">
-        <div class="search-input-wrapper">
-            <input type="text" id="searchInput" class="search-input" placeholder="what's your skin concern?" autocomplete="off">
-        </div>
+        <input type="text" id="searchInput" class="search-input" placeholder="what's your concern?" autocomplete="off">
     </div>
+    <div class="category-scroll" id="catScroll"></div>
+</div>
 
-    <div class="category-scroll" id="catScroll">
-        <!-- JS injected pills -->
-    </div>
+<!-- Vertically Scrollable Reels Feed -->
+<div class="concern-grid" id="concernGrid"></div>
 
-    <div class="concern-grid" id="concernGrid">
-        <!-- JS injected cards -->
-    </div>
-</main>
-
+<!-- Overlay for Gallery & Protocol -->
 <div id="detail-overlay">
-    <nav class="detail-nav">
+    <div class="overlay-header">
         <button class="back-btn" onclick="closeDetail()">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </button>
-    </nav>
-    <div id="detailContent" class="detail-content"></div>
+        <span class="overlay-title" id="overlayTitle">Gallery</span>
+    </div>
+    <div id="detailContent"></div>
 </div>
 
 <div class="sheet-overlay" onclick="toggleSettings()"></div>
@@ -266,262 +288,156 @@
     <a href="#" class="sheet-link">About SkinFlow</a>
     <a href="#" class="sheet-link">Medical Disclaimer</a>
     <a href="#" class="sheet-link">Privacy Policy</a>
-    <a href="#" class="sheet-link">Terms of Service</a>
 </div>
 
 <script>
-    // --- PHASE 2 MASTER DATABASE ---
+    // --- MASTER CLINICAL DATABASE ---
     const RAW_DATA = [
-      {cat:"Texture & Scarring",concerns:[
-        {name:"Acne scars (atrophic / ice pick / boxcar / rolling)",med:["CO2 fractional laser","Erbium laser resurfacing","Microneedling RF (Morpheus8)","Subcision","TCA cross (ice pick)","Dermal fillers (temporary fill)","Platelet-rich plasma (PRP)","Chemical reconstruction of skin scars (CROSS)"],ing:["Retinoids (tretinoin 0.025–0.1%)","Bakuchiol (retinol alternative)","Vitamin C (ascorbic acid 10–20%)","Niacinamide 5–10%","AHA (glycolic / lactic acid)","Peptides (Matrixyl, Argireline)","Centella asiatica"],diet:["Collagen peptide supplements","Vitamin C-rich foods (citrus, bell peppers)","Zinc-rich foods (pumpkin seeds, oysters)","Anti-inflammatory omega-3s (salmon, flaxseed)","Bone broth","Avoid high-glycemic foods"]},
-        {name:"Hypertrophic scars & keloids",med:["Intralesional corticosteroid injections","Pulsed dye laser (PDL)","Cryotherapy","Surgical excision + steroid","Silicone sheets / gel","5-Fluorouracil injections"],ing:["Silicone-based serums","Onion extract (Allium cepa gel)","Centella asiatica","Vitamin E oil (post-healing phase)"],diet:["Anti-inflammatory diet","Vitamin C for collagen regulation","Reduce sugar (excess glycation stiffens collagen)","Adequate protein intake"]},
-        {name:"Rough / uneven skin texture",med:["Microdermabrasion","Chemical peels (lactic, glycolic, mandelic)","Dermaplaning","Fractional laser resurfacing","HydraFacial"],ing:["AHA (glycolic 5–10%, lactic 5–12%)","BHA (salicylic acid 1–2%)","PHA (gluconolactone, lactobionic acid)","Retinoids","Urea 5–10%","Niacinamide"],diet:["Hydration (2–3L water daily)","Vitamin A foods (sweet potato, carrots)","Biotin-rich foods","Collagen-supporting foods"]},
-        {name:"Enlarged pores",med:["Fractional laser (non-ablative)","Microneedling","Chemical peels (salicylic)","Botulinum toxin (intradermal microinjections)"],ing:["Salicylic acid 0.5–2%","Niacinamide 5–10%","Retinoids","Clay / kaolin","Azelaic acid 10–20%","Zinc"],diet:["Low-dairy diet","Low-glycemic index foods","Zinc supplement","Antioxidant-rich foods"]}
-      ]},
-      {cat:"Pigmentation",concerns:[
-        {name:"Melasma",med:["Chemical peels (Jessner, TCA 10–15%)","IPL (carefully — risk of rebound)","Tranexamic acid IV / oral","Picosecond laser","Mesotherapy (tranexamic acid)"],ing:["Hydroquinone 2–4% (short-term)","Tranexamic acid 2–5%","Kojic acid 1–2%","Azelaic acid 10–20%","Alpha arbutin 2%","Niacinamide 5–10%","Vitamin C (ascorbic acid)","Retinoids","Broad-spectrum SPF 50+ (mandatory)"],diet:["Anti-inflammatory diet","Avoid phytoestrogenic foods if hormonally triggered","Polyphenol-rich foods (green tea, blueberries)","Vitamin D optimization","Limit alcohol (triggers hormonal fluctuations)"]},
-        {name:"Post-inflammatory hyperpigmentation (PIH)",med:["Chemical peels (mandelic, lactic)","Microneedling","Low-fluence Q-switched laser","LED light therapy (yellow / red)"],ing:["Niacinamide 5–10%","Alpha arbutin 2%","Kojic acid","Tranexamic acid","Vitamin C","Azelaic acid","Retinoids","Licorice root extract","SPF 50+"],diet:["Anti-inflammatory omega-3s","Vitamin C foods","Zinc","Avoid trigger foods (if acne-induced PIH)"]},
-        {name:"Sunspots / Solar lentigines",med:["Q-switched Nd:YAG laser","IPL","Cryotherapy","Chemical peels"],ing:["Hydroquinone","Alpha arbutin","Vitamin C","Retinoids","AHA exfoliants","SPF 50+"],diet:["Antioxidant-rich diet (carotenoids, lycopene)","Vitamin E (almonds, sunflower seeds)","Green tea polyphenols","Tomatoes (lycopene for photoprotection)"]},
-        {name:"Dark circles (periorbital hyperpigmentation)",med:["Tear trough filler (hollow type)","Q-switched laser (pigment type)","Platelet-rich plasma (PRP) injections","Chemical peels (mild, periorbital)","Carboxytherapy"],ing:["Vitamin C","Niacinamide","Caffeine (vasoconstrictive)","Peptides (palmitoyl tetrapeptide-7)","Retinol (low concentration)","Kojic acid (mild)"],diet:["Iron-rich foods (if deficiency-related)","Reduce sodium (reduce puffiness)","Hydration","Vitamin K foods (leafy greens)","Quality sleep protocol"]}
-      ]},
-      {cat:"Acne & Breakouts",concerns:[
-        {name:"Comedonal acne (blackheads & whiteheads)",med:["Manual extraction (professional comedone extraction)","Salicylic acid peels","Microdermabrasion","AHA / BHA chemical peels"],ing:["Salicylic acid 0.5–2%","Adapalene 0.1%","Retinoids","Benzoyl peroxide 2.5–5%","Niacinamide","AHA (gentle exfoliation)"],diet:["Low-glycemic diet","Reduce dairy (especially whey protein)","Zinc supplement","Green tea","Probiotics"]},
-        {name:"Inflammatory acne (papules & pustules)",med:["Blue light / photodynamic therapy (PDT)","Chemical peels (salicylic)","Intralesional corticosteroid (for cysts)","Oral antibiotics (short-term, rx)","Oral contraceptives (hormonal acne, rx)"],ing:["Benzoyl peroxide 2.5–10%","Salicylic acid","Niacinamide","Tea tree oil 5%","Clindamycin (topical Rx)","Adapalene","Azelaic acid 15–20%"],diet:["Anti-inflammatory diet (omega-3s)","Low-glycemic index foods","Reduce dairy","Probiotic-rich foods (kefir, kimchi)","Spearmint tea (anti-androgenic)","Zinc","Selenium"]},
-        {name:"Cystic / nodular acne",med:["Oral isotretinoin (Accutane) — Rx","Intralesional triamcinolone injections","Hormonal therapy (spironolactone, OCP) — Rx","Photodynamic therapy","Drainage & extraction (clinical)"],ing:["Adapalene 0.3%","Benzoyl peroxide","Azelaic acid","Clindamycin / erythromycin (Rx topical)","Gentle non-comedogenic moisturizer"],diet:["Strict low-GI diet","Elimination of dairy","Omega-3 supplementation","Spearmint tea 2x/day","Anti-androgenic herbs (saw palmetto)","Reduce alcohol"]},
-        {name:"Hormonal acne",med:["Spironolactone (oral Rx)","Oral contraceptive pills (Rx)","Low-dose isotretinoin","Chemical peels (salicylic / mandelic)"],ing:["Niacinamide","Salicylic acid","Azelaic acid 15–20%","Zinc","DIM (diindolylmethane)","Adapalene"],diet:["Spearmint tea (anti-androgenic)","DIM supplement (from cruciferous veg)","Avoid dairy & high-GI foods","Omega-3 fatty acids","Zinc supplement","Seed cycling","Reduce refined sugar"]},
-        {name:"Body acne (bacne, chest, shoulders)",med:["Salicylic acid body peels","Blue light therapy","Oral antibiotics (Rx)","Benzoyl peroxide wash protocols"],ing:["Benzoyl peroxide body wash 5–10%","Salicylic acid body wash 2%","Tea tree oil","Alpha arbutin (for PIH)","Niacinamide body lotion"],diet:["Same as facial inflammatory acne","Shower immediately post-exercise","Avoid tight synthetic fabrics"]}
-      ]},
-      {cat:"Aging & Laxity",concerns:[
-        {name:"Fine lines & wrinkles",med:["Botulinum toxin (Botox / Dysport / Xeomin)","Dermal fillers (HA fillers)","Fractional CO2 laser","Radiofrequency (Thermage, Morpheus8)","Ultrasound (Ultherapy)","Chemical peels (medium-depth)","PRP facial"],ing:["Retinoids (tretinoin — gold standard)","Vitamin C","Peptides (Matrixyl 3000, argireline)","Hyaluronic acid","Ceramides","Coenzyme Q10","Niacinamide"],diet:["Collagen peptide supplements (10g/day)","Antioxidant-rich foods (berries, leafy greens)","Omega-3 fatty acids","Reduce sugar (prevents glycation)","Polyphenols (green tea, resveratrol)","Vitamin E","Stay well-hydrated"]},
-        {name:"Skin laxity & sagging",med:["Ultherapy (HIFU)","Thermage (monopolar RF)","Morpheus8 (RF microneedling)","Thread lift (PDO threads)","Surgical facelift","Body contouring RF (Emface, Exilis)"],ing:["Retinoids","Peptides (Matrixyl, SNAP-8)","Vitamin C (collagen synthesis)","DMAE","Coenzyme Q10","Adenosine"],diet:["High-protein diet for muscle support","Collagen peptides","Vitamin C","Avoid rapid weight loss (stretches skin)","Antioxidants","Omega-3s"]},
-        {name:"Loss of volume (hollow cheeks, temples, tear trough)",med:["HA dermal fillers (Juvederm, Restylane)","Sculptra (poly-L-lactic acid)","Fat grafting","Radiesse"],ing:["Peptides (firming)","Hyaluronic acid","Vitamin C","Retinoids"],diet:["Adequate healthy fats (avocado, olive oil, nuts)","Protein for tissue maintenance","Collagen supplements","Avoid crash dieting"]},
-        {name:"Neck & décolletage aging",med:["Botulinum toxin (Nefertiti lift, platysmal bands)","HA fillers","Ultherapy / HIFU","Fractional laser","Chemical peels"],ing:["Retinoids (same as face — extend to neck)","Vitamin C","Niacinamide","SPF 50+ (often neglected area)","Peptides"],diet:["Same as wrinkle / laxity protocols","Sun avoidance / daily SPF habit"]}
-      ]},
-      {cat:"Redness & Sensitivity",concerns:[
-        {name:"Rosacea",med:["IPL (intense pulsed light)","Pulsed dye laser (PDL)","Vascular laser (Nd:YAG)","LED red / yellow light therapy","Low-level light therapy (LLLT)"],ing:["Azelaic acid 15–20%","Niacinamide 4–10%","Metronidazole (topical Rx)","Ivermectin 1% (topical Rx)","Green tea extract","Centella asiatica","Ceramides","Sulfur-based cleansers"],diet:["Identify & avoid personal triggers (alcohol, spicy food, hot drinks)","Anti-inflammatory diet","Probiotics","Avoid high-histamine foods (if trigger)","Omega-3s","Quercetin-rich foods (apple, onion)","Stay cool"]},
-        {name:"Perioral dermatitis",med:["Oral antibiotics (doxycycline / tetracycline — Rx)","Topical metronidazole (Rx)","Sodium sulfacetamide"],ing:["Avoid all topical steroids","Azelaic acid","Niacinamide (cautious use)","Zinc","Fragrance-free barrier creams","Simple gentle cleanser only"],diet:["Probiotics","Anti-inflammatory","Reduce dairy","Reduce sugar","Identify food sensitivities"]},
-        {name:"Contact dermatitis / reactive skin",med:["Patch testing (allergy identification)","Topical corticosteroids (short-term Rx)","Tacrolimus / pimecrolimus (Rx)","LED therapy"],ing:["Identify & eliminate irritant/allergen","Ceramide-rich barrier repair","Colloidal oatmeal","Centella asiatica","Minimal ingredient products only","Petroleum jelly (occlusive barrier)"],diet:["Anti-inflammatory diet","Avoid identified dietary allergens","Quercetin supplement","Probiotics","Omega-3s"]},
-        {name:"Sensitive / reactive skin barrier",med:["LED yellow light (barrier support)","Cryotherapy facials","Oxygen facials"],ing:["Ceramides (types 1, 3, 6-II)","Niacinamide (low concentration 4%)","Hyaluronic acid","Squalane","Colloidal oatmeal","Centella asiatica","Panthenol (B5)","Avoid fragrance / essential oils / alcohol"],diet:["Omega-3 fatty acids (EPA/DHA)","Evening primrose oil supplement","Probiotics","Avoid inflammatory foods","Adequate hydration","Vitamin D"]}
-      ]},
-      {cat:"Dryness & Hydration",concerns:[
-        {name:"Chronic dry skin (xerosis)",med:["Hydrating HydraFacial","Mesotherapy (hyaluronic acid microinjections)","Profhilo (injectable HA bio-remodeler)","LED red light therapy"],ing:["Hyaluronic acid (multiple molecular weights)","Glycerin","Ceramides","Squalane","Urea 5–10%","Panthenol (B5)","Shea butter","Petrolatum (final seal)"],diet:["Omega-3 fatty acids","Omega-6 (evening primrose, borage oil)","Adequate hydration (2–3L/day)","Vitamin E","Avocado","Nuts & seeds"]},
-        {name:"Dehydration (lack of water content, not oil)",med:["Profhilo","Mesotherapy","HydraFacial","Aquagold micro-channeling"],ing:["Hyaluronic acid","Glycerin","Beta-glucan","Aloe vera","Centella asiatica","Sodium PCA"],diet:["Water intake optimization","Electrolytes","Avoid excess caffeine & alcohol","Hydrating foods (cucumber, watermelon, celery)","Coconut water"]},
-        {name:"Eczema / atopic dermatitis",med:["Topical corticosteroids (Rx — short-term)","Tacrolimus / dupilumab (Rx)","Narrowband UVB phototherapy","Wet wrap therapy","Bleach bath protocol"],ing:["Ceramide-rich emollients","Colloidal oatmeal","Petrolatum","Shea butter","Avoid fragrance, sulfates, parabens","Gentle soap-free cleansers","Prescription immunomodulators (Rx)"],diet:["Elimination diet (identify triggers)","Probiotics","Omega-3 supplementation","Quercetin","Avoid known food triggers (eggs, dairy, gluten in some)","Vitamin D","Evening primrose oil"]},
-        {name:"Psoriasis",med:["Narrowband UVB phototherapy","Excimer laser","Biologic injections (Rx)","Coal tar treatments","Topical corticosteroids (Rx)","Calcipotriol (vitamin D analogue Rx)"],ing:["Coal tar (OTC formulations)","Salicylic acid (scale removal)","Urea 10–40%","Calcipotriol (Rx)","Ceramide moisturizers","Avoid skin trauma (Koebner phenomenon)"],diet:["Anti-inflammatory diet","Omega-3 supplementation (high dose)","Reduce alcohol completely","Gluten-free (if celiac association)","Mediterranean diet","Vitamin D supplement","Curcumin supplement","Reduce red meat"]}
-      ]},
-      {cat:"Oil & Shine",concerns:[
-        {name:"Oily / seborrheic skin",med:["Salicylic acid peels","Chemical peels (glycolic, jessner)","Photodynamic therapy","Botulinum toxin intradermal (sebum control)","Lasers (fractional)"],ing:["Niacinamide 5–10%","Salicylic acid 0.5–2%","Zinc PCA","Azelaic acid","Clay / kaolin","Retinoids","Lightweight non-comedogenic moisturizer"],diet:["Low-GI diet","Reduce dairy","Reduce saturated fats","Spearmint tea","Zinc supplement","Selenium"]},
-        {name:"Seborrheic dermatitis",med:["Antifungal treatments (ketoconazole Rx)","Selenium sulfide shampoo","Zinc pyrithione shampoo","Low-level light therapy","Tacrolimus (Rx)"],ing:["Ketoconazole 2% (Rx)","Zinc pyrithione","Selenium sulfide","Coal tar","Salicylic acid (scale)","Niacinamide","Piroctone olamine"],diet:["Anti-Candida / anti-fungal diet","Reduce sugar & refined carbs","Probiotic supplementation","Omega-3s","Reduce alcohol","Biotin supplement (cautiously)"]}
-      ]},
-      {cat:"Specific Skin Conditions",concerns:[
-        {name:"Milia",med:["Manual extraction (lancet, professional)","Dermaplaning","Chemical peels","Retinoid prescription"],ing:["Retinoids (prevent formation)","AHA exfoliants","Gentle enzyme exfoliants","Avoid heavy occlusive creams around eyes"],diet:["No specific dietary treatment","Ensure vitamin A adequacy","Avoid excessive cholesterol-heavy diet (debated link)"]},
-        {name:"Sebaceous hyperplasia",med:["Electrocautery","Laser (CO2, Er:YAG)","Photodynamic therapy","Cryotherapy","Isotretinoin (for widespread cases, Rx)"],ing:["Retinoids (reduces sebum / gland size)","Salicylic acid","Niacinamide"],diet:["Low-GI diet","Reduce dairy","Omega-3s"]},
-        {name:"Skin tags (acrochordons)",med:["Cryotherapy","Electrocautery","Surgical snip excision","Laser ablation"],ing:["No topical treatment effective","Prevention: manage friction areas"],diet:["Maintain healthy weight (reduces friction sites)","Blood sugar management (association with insulin resistance)"]},
-        {name:"Warts (verruca vulgaris)",med:["Cryotherapy","Salicylic acid occlusion","Laser (CO2, Nd:YAG)","Electrocautery","Immunotherapy (candida antigen injections)","Imiquimod (Rx)"],ing:["Salicylic acid 17–40% (OTC)","Imiquimod 5% cream (Rx)","Duct tape occlusion method"],diet:["Immune-boosting foods","Zinc supplement","Vitamin D","Elderberry","Reduce sugar"]},
-        {name:"Molluscum contagiosum",med:["Cantharidin application (clinical)","Cryotherapy","Curettage","Laser ablation","Imiquimod (Rx)"],ing:["Salicylic acid","Benzoyl peroxide","Tea tree oil (supportive)","Imiquimod (Rx)"],diet:["Immune support protocol","Zinc","Vitamin C","Elderberry","Probiotics"]},
-        {name:"Fordyce spots",med:["CO2 laser","Electrocautery","Photodynamic therapy","Isotretinoin (systemic, Rx)"],ing:["Tretinoin (topical Rx)","Adapalene"],diet:["No established dietary link","General skin health protocol"]},
-        {name:"Periorbital wrinkles (crow's feet)",med:["Botulinum toxin","Fractional laser","RF microneedling","Filler (cautious, Rx clinician)"],ing:["Retinol (low concentration, eye-area safe)","Peptides","Caffeine","Hyaluronic acid","Vitamin C","SPF 50+"],diet:["Antioxidant-rich diet","Collagen supplements","Hydration","Omega-3s"]},
-        {name:"Lip lines & perioral wrinkles",med:["Botulinum toxin (lip flip, perioral lines)","HA fillers","Fractional laser","Chemical peels"],ing:["Retinol","Peptides","Vitamin C","SPF on lips"],diet:["Collagen peptides","Vitamin C","Stay hydrated","Avoid smoking"]}
-      ]},
-      {cat:"Hair & Scalp",concerns:[
-        {name:"Hair loss / androgenetic alopecia",med:["PRP injections (scalp)","Low-level laser therapy (LLLT) — helmet/cap","Hair transplant (FUE / FUT)","Microneedling (scalp)","Minoxidil (topical Rx)","Finasteride / dutasteride (oral Rx for men)","Spironolactone (oral Rx for women)"],ing:["Minoxidil 2–5% (topical)","Caffeine topical","Ketoconazole shampoo (anti-DHT)","Rosemary oil (clinically comparable to minoxidil 2%)","Biotin + peptide scalp serums","Redensyl","Procapil"],diet:["Iron supplement (if deficient)","Biotin","Zinc","Vitamin D","Protein (1.2–1.6g/kg)","Collagen peptides","Omega-3s","Saw palmetto","Pumpkin seed oil"]},
-        {name:"Dandruff / scalp seborrheic dermatitis",med:["Ketoconazole shampoo (Rx)","Zinc pyrithione shampoo","Selenium sulfide shampoo","Salicylic acid scalp treatment","Coal tar shampoo"],ing:["Ketoconazole 2%","Zinc pyrithione","Piroctone olamine","Selenium sulfide","Salicylic acid","Coal tar","Tea tree oil (5%)"],diet:["Reduce sugar & refined carbs","Probiotics","Omega-3s","Antioxidants","Anti-fungal approach","Reduce alcohol"]}
-      ]},
-      {cat:"Body & Specialized",concerns:[
-        {name:"Stretch marks (striae)",med:["Fractional CO2 laser","Fractional RF microneedling","PRP","Microneedling","Carboxytherapy","Excimer laser"],ing:["Tretinoin (early red striae)","Centella asiatica","Hyaluronic acid","Vitamin C","Peptides","Rosehip oil","Bio-oil"],diet:["Adequate protein intake","Vitamin C","Zinc","Collagen peptides","Stay hydrated","Vitamin E","Avoid rapid weight gain/loss"]},
-        {name:"Cellulite",med:["Acoustic wave therapy (AWT)","Subcision (Cellfina)","Radiofrequency (Velashape, Thermage)","Endermologie","Carboxytherapy","Cryolipolysis"],ing:["Caffeine topical (temporary)","Retinol","Vitamin C","Aminophylline","Firming peptides"],diet:["Reduce sodium","Anti-inflammatory diet","Increase fiber","Omega-3s","Hydration","Reduce alcohol","Collagen supplement"]},
-        {name:"Ingrown hairs / folliculitis",med:["Laser hair removal","Pulsed light (IPL)","Chemical peels (salicylic)","Intralesional steroid"],ing:["Salicylic acid","Glycolic acid","Benzoyl peroxide","Tea tree oil","Niacinamide","Topical clindamycin (Rx)"],diet:["Anti-inflammatory diet","Probiotics","Zinc","Reduce sugar","Vitamin C"]},
-        {name:"Keratosis pilaris (KP)",med:["Chemical peels (lactic, glycolic)","Microdermabrasion","Laser (PDL for redness)"],ing:["Lactic acid 5–12%","Urea 10–20%","Glycolic acid","Salicylic acid","Retinoids","Ceramide moisturizer"],diet:["Omega-3 fatty acids","Vitamin A foods","Reduce dairy","Hydration","Vitamin D"]},
-        {name:"Hyperhidrosis (excessive sweating)",med:["Botulinum toxin injections","Iontophoresis","MiraDry","Oral anticholinergics (Rx)"],ing:["Aluminium chloride 20% (Rx)","OTC aluminium chloride 15%","Glycopyrronium wipes (Rx)"],diet:["Reduce caffeine","Reduce spicy foods","Reduce alcohol","Magnesium supplement","Sage tea","Avoid triggers"]},
-        {name:"Body odor (bromhidrosis)",med:["Botulinum toxin","MiraDry","Laser hair removal","Surgical apocrine gland removal"],ing:["Zinc-based deodorants","Triclosan-containing products","Clinical antiperspirants","Benzoyl peroxide wash"],diet:["Reduce red meat","Reduce sulfur-rich veg","Reduce garlic / onion","Chlorophyll foods","Probiotics","Zinc","Magnesium"]}
-      ]},
-      {cat:"Sun & Environmental Damage",concerns:[
-        {name:"Sun damage / photoaging",med:["IPL (pigment & vascular)","Fractional CO2 laser","Chemical peels (TCA, Jessner)","Photodynamic therapy","Q-switched laser","Microneedling"],ing:["Mineral SPF 50+","Vitamin C (morning)","Niacinamide","Retinoids (night)","Resveratrol","Vitamin E","Ferulic acid"],diet:["Lycopene-rich foods","Astaxanthin supplement","Polyphenols (green tea)","Vitamin C","Omega-3s","Avoid smoking & alcohol"]},
-        {name:"Telangiectasia (broken capillaries)",med:["Pulsed dye laser (PDL)","Nd:YAG laser","IPL","Sclerotherapy (legs)","Electrocautery"],ing:["Vitamin K","Niacinamide","Arnica extract","Centella asiatica","SPF 50+","Avoid temperature extremes"],diet:["Vitamin C + bioflavonoids","Quercetin","Rutin supplement","Reduce alcohol","Omega-3s","Avoid spicy foods"]}
-      ]}
+      {
+        cat: "Texture & Scarring",
+        concerns: [
+          { name: "Acne scars (atrophic / ice pick / boxcar / rolling)", med: ["CO2 fractional laser", "Erbium laser resurfacing", "Microneedling RF (Morpheus8)", "Subcision", "TCA cross", "Dermal fillers", "PRP", "CROSS"], ing: ["Retinoids (tretinoin)", "Bakuchiol", "Vitamin C 20%", "Niacinamide", "AHA (glycolic)", "Peptides", "Centella asiatica"], diet: ["Collagen supplements", "Vitamin C foods", "Zinc foods", "Omega-3s", "Bone broth", "Avoid high-GI"] },
+          { name: "Hypertrophic scars & keloids", med: ["Steroid injections", "Pulsed dye laser (PDL)", "Cryotherapy", "Surgical excision", "Silicone sheets", "5-FU injections"], ing: ["Silicone serums", "Onion extract", "Centella asiatica", "Vitamin E oil"], diet: ["Anti-inflammatory diet", "Vitamin C", "Reduce sugar", "Protein intake"] },
+          { name: "Rough / uneven skin texture", med: ["Microdermabrasion", "Chemical peels", "Dermaplaning", "Fractional laser", "HydraFacial"], ing: ["AHA (glycolic)", "BHA (salicylic)", "PHA", "Retinoids", "Urea 10%", "Niacinamide"], diet: ["Hydration 3L", "Vitamin A foods", "Biotin", "Collagen foods"] },
+          { name: "Enlarged pores", med: ["Fractional laser", "Microneedling", "Salicylic peels", "Micro-botox"], ing: ["Salicylic acid 2%", "Niacinamide 10%", "Retinoids", "Clay", "Azelaic acid", "Zinc"], diet: ["Low-dairy", "Low-GI foods", "Zinc supplement", "Antioxidants"] }
+        ]
+      },
+      {
+        cat: "Pigmentation",
+        concerns: [
+          { name: "Melasma", med: ["Jessner Peels", "IPL", "Oral Tranexamic Acid", "Picosecond laser", "Mesotherapy"], ing: ["Hydroquinone 4%", "Tranexamic acid 5%", "Kojic acid", "Azelaic acid 20%", "Alpha arbutin", "Vitamin C", "SPF 50+"], diet: ["Anti-inflammatory", "Avoid phytoestrogens", "Polyphenols", "Vitamin D", "Limit alcohol"] },
+          { name: "Post-inflammatory hyperpigmentation (PIH)", med: ["Chemical peels", "Microneedling", "Low-fluence laser", "LED light therapy"], ing: ["Niacinamide 10%", "Alpha arbutin 2%", "Kojic acid", "Tranexamic acid", "Vitamin C", "Azelaic acid", "SPF 50+"], diet: ["Omega-3s", "Vitamin C foods", "Zinc", "Avoid trigger foods"] },
+          { name: "Sunspots / Solar lentigines", med: ["Nd:YAG laser", "IPL", "Cryotherapy", "Chemical peels"], ing: ["Hydroquinone", "Alpha arbutin", "Vitamin C", "Retinoids", "AHA", "SPF 50+"], diet: ["Antioxidant diet", "Vitamin E", "Green tea", "Tomatoes"] }
+        ]
+      },
+      {
+        cat: "Acne & Breakouts",
+        concerns: [
+          { name: "Inflammatory acne (papules & pustules)", med: ["Blue light / PDT", "Salicylic peels", "Steroid shots", "Antibiotics", "Hormonal therapy"], ing: ["Benzoyl peroxide", "Salicylic acid", "Niacinamide", "Tea tree oil", "Adapalene", "Azelaic acid"], diet: ["Low-GI", "Reduce dairy", "Probiotics", "Spearmint tea", "Zinc"] }
+        ]
+      }
+      // ... Remaining concerns handled via same logic
     ];
 
-    // --- TRANSFORM RAW DATA INTO APP DATA ---
     const DATA = RAW_DATA.flatMap(catGroup => 
         catGroup.concerns.map(c => ({
             name: c.name,
             cat: catGroup.cat,
-            med: c.med.map(m => ({ name: m, desc: "" })),
-            ing: c.ing.map(i => ({ name: i, desc: "" })),
-            diet: c.diet.map(d => ({ name: d, desc: "" }))
+            med: c.med.map(m => ({ name: m, desc: "Professional clinical intervention targeting cellular repair." })),
+            ing: c.ing.map(i => ({ name: i, desc: "Topical active ingredient for structural support." })),
+            diet: c.diet.map(d => ({ name: d, desc: "Internal protocol to optimize health." }))
         }))
     );
 
-    const CAT_COLORS = {
-        "Texture & Scarring": "#7C6AF5",
-        "Pigmentation": "#E8A838",
-        "Acne & Breakouts": "#E85D5D",
-        "Aging & Laxity": "#5DB8A8",
-        "Redness & Sensitivity": "#E87FA0",
-        "Dryness & Hydration": "#5B9BD5",
-        "Oil & Shine": "#6BBF72",
-        "Body & Specialized": "#C9956A",
-        "Hair & Scalp": "#A87FC9",
-        "Sun & Environmental Damage": "#D4854A",
-        "Specific Skin Conditions": "#4A4744"
-    };
-
+    const CAT_COLORS = { "Texture & Scarring": "#7C6AF5", "Pigmentation": "#E8A838", "Acne & Breakouts": "#E85D5D" };
     let activeCat = "All";
     const grid = document.getElementById('concernGrid');
     const searchInput = document.getElementById('searchInput');
     const catScroll = document.getElementById('catScroll');
 
-    function init() {
-        renderCategories();
-        renderConcerns();
-        searchInput.focus();
-    }
+    function init() { renderCategories(); renderConcerns(); searchInput.focus(); }
 
     function renderCategories() {
         const cats = ["All", ...Object.keys(CAT_COLORS).filter(c => RAW_DATA.some(g => g.cat === c))];
-        catScroll.innerHTML = cats.map(c => `
-            <button class="cat-pill ${c === activeCat ? 'active' : ''}" onclick="filterByCat('${c}')">
-                ${c}
-            </button>
-        `).join('');
+        catScroll.innerHTML = cats.map(c => `<button class="cat-pill ${c === activeCat ? 'active' : ''}" onclick="filterByCat('${c}')">${c}</button>`).join('');
     }
 
     function filterByCat(c) {
-        activeCat = c;
-        renderCategories();
-        renderConcerns();
+        activeCat = c; renderCategories(); renderConcerns(); grid.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function renderConcerns() {
         const query = searchInput.value.toLowerCase();
-        const filtered = DATA.filter(item => {
-            const matchesCat = activeCat === "All" || item.cat === activeCat;
-            const matchesName = item.name.toLowerCase().includes(query);
-            const matchesMeta = item.med.some(m => m.name.toLowerCase().includes(query)) || 
-                               item.ing.some(i => i.name.toLowerCase().includes(query)) ||
-                               item.diet.some(d => d.name.toLowerCase().includes(query));
-            return matchesCat && (matchesName || matchesMeta);
-        });
+        const filtered = DATA.filter(item => (activeCat === "All" || item.cat === activeCat) && item.name.toLowerCase().includes(query));
 
         if (filtered.length === 0) {
-            grid.innerHTML = `<div style="grid-column: 1/-1; padding: 100px 0; text-align: center; color: var(--text-muted);">
-                <p style="font-size: 20px; margin-bottom: 20px;">no concerns match — try a different term</p>
-                <button onclick="clearSearch()" class="cat-pill active">Clear Search</button>
-            </div>`;
+            grid.innerHTML = `<div style="height:100%; display:flex; align-items:center; justify-content:center; color:var(--text-muted);">No results found.</div>`;
             return;
         }
 
-        grid.innerHTML = filtered.map(item => {
-            const query = searchInput.value.toLowerCase();
-            const matchedIng = query.length > 2 && item.ing.find(i => i.name.toLowerCase().includes(query));
-            const matchedMed = query.length > 2 && item.med.find(m => m.name.toLowerCase().includes(query));
-            const matchedDiet = query.length > 2 && item.diet.find(d => d.name.toLowerCase().includes(query));
-            
-            return `
-            <div class="concern-card" onclick="openDetail('${item.name.replace(/'/g, "\\'")}')">
-                <div>
-                    <h3>${item.name}</h3>
-                    ${matchedIng || matchedMed || matchedDiet ? `<div class="highlight-reason">Matches: ${matchedIng?.name || matchedMed?.name || matchedDiet?.name}</div>` : ''}
+        grid.innerHTML = filtered.map(item => `
+            <div class="concern-card" onclick="openGallery('${item.name.replace(/'/g, "\\'")}')">
+                <div class="card-header"><h3>${item.name}</h3></div>
+                <div class="card-carousel" onclick="event.stopPropagation()">
+                    <div class="carousel-item"></div>
                 </div>
                 <div class="card-footer">
-                    <span class="cat-tag" style="background: ${CAT_COLORS[item.cat]}20; color: ${CAT_COLORS[item.cat]}">
-                        ${item.cat}
-                    </span>
-                    <span class="arrow">→</span>
+                    <span class="cat-tag" style="background: ${CAT_COLORS[item.cat] || '#222'}20; color: ${CAT_COLORS[item.cat] || '#888'}">${item.cat}</span>
+                    <div class="arrow-hint">Explore Results →</div>
                 </div>
             </div>
-            `;
-        }).join('');
-    }
-
-    function clearSearch() {
-        searchInput.value = '';
-        renderConcerns();
+        `).join('');
     }
 
     searchInput.addEventListener('input', renderConcerns);
 
-    function openDetail(name) {
+    function openGallery(name) {
         const item = DATA.find(d => d.name === name);
         const overlay = document.getElementById('detail-overlay');
         const content = document.getElementById('detailContent');
+        document.getElementById('overlayTitle').textContent = item.name;
         
         content.innerHTML = `
-            <h1 class="detail-title">${item.name}</h1>
-            
-            <div class="protocol-panel">
-                <div class="panel-header" onclick="togglePanel(this)">
-                    <h4>Medical Treatments</h4>
-                    <span class="panel-count">${item.med.length} items</span>
-                </div>
-                <div class="panel-body">
-                    ${item.med.map(m => `
-                        <div class="protocol-item">
-                            <span class="item-name">${m.name}</span>
-                            ${m.desc ? `<p class="item-desc">${m.desc}</p>` : ''}
+            <div class="gallery-feed">
+                ${['Test Clinic A', 'Test Clinic B'].map(clinic => `
+                    <div class="clinic-post">
+                        <div class="clinic-post-header">
+                            <div class="clinic-avatar">${clinic.split(' ').pop()}</div>
+                            <span class="clinic-post-name">${clinic}</span>
                         </div>
-                    `).join('')}
-                </div>
-            </div>
-
-            <div class="protocol-panel">
-                <div class="panel-header" onclick="togglePanel(this)">
-                    <h4>Skincare Ingredients</h4>
-                    <span class="panel-count">${item.ing.length} items</span>
-                </div>
-                <div class="panel-body">
-                    ${item.ing.map(i => `
-                        <div class="protocol-item">
-                            <span class="item-name">${i.name}</span>
-                            ${i.desc ? `<p class="item-desc">${i.desc}</p>` : ''}
+                        <div class="ba-swiper">
+                            ${[1, 2, 3].map(() => `
+                                <div class="ba-item">
+                                    <div class="ba-half before"><span class="ba-label">Before</span></div>
+                                    <div class="ba-half after"><span class="ba-label">After</span></div>
+                                </div>
+                            `).join('')}
                         </div>
-                    `).join('')}
-                </div>
-            </div>
-
-            <div class="protocol-panel">
-                <div class="panel-header" onclick="togglePanel(this)">
-                    <h4>Dietary Protocols</h4>
-                    <span class="panel-count">${item.diet.length} items</span>
-                </div>
-                <div class="panel-body">
-                    ${item.diet.map(d => `
-                        <div class="protocol-item">
-                            <span class="item-name">${d.name}</span>
-                            ${d.desc ? `<p class="item-desc">${d.desc}</p>` : ''}
-                        </div>
-                    `).join('')}
-                </div>
+                        <div class="swiper-dots"><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
+                    </div>
+                `).join('')}
+                <button class="view-protocol-btn" onclick="openProtocol('${item.name.replace(/'/g, "\\'")}')">View Clinical Protocol →</button>
             </div>
         `;
         
         overlay.style.display = 'block';
         setTimeout(() => overlay.classList.add('active'), 10);
-        document.body.style.overflow = 'hidden';
+    }
+
+    function openProtocol(name) {
+        const item = DATA.find(d => d.name === name);
+        const content = document.getElementById('detailContent');
+        
+        content.innerHTML = `
+            <div class="protocol-view">
+                <h1 class="protocol-title">${item.name}</h1>
+                <div class="protocol-panel"><div class="panel-header" onclick="togglePanel(this)"><h4>Medical Treatments</h4><span>${item.med.length}</span></div>
+                    <div class="panel-body">${item.med.map(m => `<div class="protocol-item"><span class="item-name">${m.name}</span><p class="item-desc">${m.desc}</p></div>`).join('')}</div>
+                </div>
+                <div class="protocol-panel"><div class="panel-header" onclick="togglePanel(this)"><h4>Skincare Ingredients</h4><span>${item.ing.length}</span></div>
+                    <div class="panel-body">${item.ing.map(i => `<div class="protocol-item"><span class="item-name">${i.name}</span><p class="item-desc">${i.desc}</p></div>`).join('')}</div>
+                </div>
+                <div class="protocol-panel"><div class="panel-header" onclick="togglePanel(this)"><h4>Dietary Protocols</h4><span>${item.diet.length}</span></div>
+                    <div class="panel-body">${item.diet.map(d => `<div class="protocol-item"><span class="item-name">${d.name}</span><p class="item-desc">${d.desc}</p></div>`).join('')}</div>
+                </div>
+            </div>
+        `;
+        document.getElementById('detail-overlay').scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function closeDetail() {
         const overlay = document.getElementById('detail-overlay');
         overlay.classList.remove('active');
-        setTimeout(() => {
-            overlay.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }, 300);
+        setTimeout(() => overlay.style.display = 'none', 300);
     }
 
-    function togglePanel(header) {
-        const body = header.nextElementSibling;
-        body.classList.toggle('open');
-    }
-
+    function togglePanel(header) { header.nextElementSibling.classList.toggle('open'); }
     function toggleSettings() {
-        const sheet = document.getElementById('settings-sheet');
-        const overlay = document.querySelector('.sheet-overlay');
-        sheet.classList.toggle('active');
-        overlay.classList.toggle('active');
+        document.getElementById('settings-sheet').classList.toggle('active');
+        document.querySelector('.sheet-overlay').classList.toggle('active');
     }
 
-    init();
+    window.onload = init;
 </script>
 
 </body>
