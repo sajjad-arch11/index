@@ -229,39 +229,87 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .clinic-post-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+        .clinic-post-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
         
-        .header-main-info { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            cursor: pointer;
-            padding: 4px 8px;
-            margin-left: -8px;
-            border-radius: 12px;
-            transition: background 0.2s ease;
-        }
-        .header-main-info:active { background: var(--surface); }
+        .clinic-header-left { display: flex; align-items: flex-start; gap: 12px; }
 
-        .clinic-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 14px; }
-        .clinic-post-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+        .header-text-stack { display: flex; flex-direction: column; gap: 6px; }
+
+        .clinic-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 14px; cursor: pointer; }
+        .clinic-post-name { font-size: 16px; font-weight: 700; color: var(--text-primary); line-height: 1.2; cursor: pointer; }
         
-        /* Star Rating Review Link */
+        /* Star Rating Review Link (The Separate Button) */
         .review-link { 
             display: flex; 
             align-items: center; 
             gap: 6px; 
             cursor: pointer; 
             background: var(--surface);
-            padding: 6px 12px;
-            border-radius: 12px;
+            padding: 4px 10px;
+            border-radius: 10px;
             border: 1px solid var(--border);
-            transition: transform 0.2s ease;
+            transition: all 0.2s ease;
+            width: fit-content;
         }
-        .review-link:active { transform: scale(0.95); }
-        .rating-num { font-size: 13px; font-weight: 800; color: var(--text-primary); }
-        .rating-stars-small { display: flex; color: var(--gold); font-size: 10px; letter-spacing: -1px; }
+        .review-link:active { transform: scale(0.95); background: var(--elevated); }
+        .rating-num { font-size: 12px; font-weight: 800; color: var(--text-primary); }
+        .rating-stars-small { display: flex; color: var(--gold); font-size: 9px; letter-spacing: -1px; }
+
+        /* Consultation Button */
+        .book-consult-btn {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .book-consult-btn:active { transform: scale(0.95); background: rgba(201, 149, 106, 0.1); }
         
+        /* --- LEAD QUALIFICATION OVERLAY --- */
+        #lead-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 4000;
+            display: none; transform: translateY(100%); transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px; flex-direction: column;
+        }
+        #lead-overlay.active { display: flex; transform: translateY(0); }
+
+        .lead-header { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
+        .lead-progress-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; position: relative; overflow: hidden; }
+        .lead-progress-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
+
+        .lead-question-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .lead-question { font-family: var(--font-heading); font-size: 28px; margin-bottom: 30px; line-height: 1.2; }
+        .lead-options { display: flex; flex-direction: column; gap: 12px; }
+        .lead-opt { 
+            background: var(--surface); border: 1px solid var(--border); 
+            padding: 18px 20px; border-radius: var(--radius-md); 
+            font-size: 15px; font-weight: 500; text-align: left; 
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .lead-opt:active { background: var(--elevated); border-color: var(--accent); transform: scale(0.98); }
+
+        /* Result View */
+        .lead-connecting { text-align: center; display: none; }
+        .loader-ring { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .receptionist-chat { display: none; animation: fadeIn 0.5s ease forwards; }
+        .chat-bubble { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 20px 20px 20px 0; margin-bottom: 20px; position: relative; }
+        .chat-name { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; display: block; }
+        .chat-msg { font-size: 15px; line-height: 1.5; color: var(--text-primary); }
+
+        .chat-actions { display: flex; flex-direction: column; gap: 12px; }
+        .chat-btn { background: var(--accent); color: var(--bg); border: none; padding: 16px; border-radius: 14px; font-weight: 700; font-size: 14px; cursor: pointer; }
+        .chat-btn-sec { background: var(--surface); color: var(--text-primary); border: 1px solid var(--border); padding: 16px; border-radius: 14px; font-weight: 600; font-size: 14px; cursor: pointer; }
+
         .ba-container {
             flex-grow: 1;
             position: relative;
@@ -506,6 +554,24 @@
     <div id="detailContent" class="gallery-feed"></div>
 </div>
 
+<!-- LEAD QUALIFICATION OVERLAY -->
+<div id="lead-overlay">
+    <div class="lead-header">
+        <button class="back-btn" onclick="closeConsultation()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="lead-progress-bar">
+            <div id="leadProgressFill" class="lead-progress-fill"></div>
+        </div>
+    </div>
+    <div id="leadFlowContent" class="lead-question-container"></div>
+    <div id="leadConnecting" class="lead-connecting">
+        <div class="loader-ring"></div>
+        <p style="color:var(--text-secondary); font-weight:600;">Verifying clinical availability...</p>
+    </div>
+    <div id="leadReceptionist" class="receptionist-chat"></div>
+</div>
+
 <!-- REVIEW OVERLAY -->
 <div id="review-overlay">
     <div id="reviewSheetContent" style="height:100%; display: flex; flex-direction: column;"></div>
@@ -602,6 +668,7 @@
             about: "A premier aesthetic destination specializing in high-tech skin reconstruction and longevity protocols. Established in 2015, we prioritize clinical excellence and artistic natural results.",
             services: ["Fractional CO2", "Sculptra", "Custom Peels", "Lymphatic Drainage"],
             rating: 4.9,
+            receptionist: "Sarah",
             doctors: [
                 { id: 'dr1', name: "Dr. Sarah Chen, MD", role: "Lead Clinician", bio: "Specialist in Advanced Laser Resurfacing", certs: ["Board Certified", "Harvard Med", "AAAM Member"] },
                 { id: 'dr2', name: "Dr. Marcus Thorne", role: "Aesthetic Specialist", bio: "Expert in Microneedling & Chemical Peels", certs: ["Board Certified", "Stanford Med"] },
@@ -613,6 +680,7 @@
             about: "Focusing on laser innovation and pigmentary disorders. Our clinic house state-of-the-art picosecond lasers and advanced chemical analysis for custom skincare.",
             services: ["Picosecond Laser", "IPL", "Deep Peels", "Visia Skin Analysis"],
             rating: 4.8,
+            receptionist: "Michael",
             doctors: [
                 { id: 'dr4', name: "Dr. Julian Voss", role: "Medical Director", bio: "Pioneer in Picosecond Laser Technology", certs: ["Board Certified", "UCSF Alumni"] },
                 { id: 'dr5', name: "Dr. Amy Wright", role: "Dermatologist", bio: "Expert in Melasma & Pigmentation", certs: ["Board Certified", "Mayo Clinic Trained"] }
@@ -623,6 +691,7 @@
             about: "Specialized in surgical scar revision and subcision. We handle complex reconstructive cases for atrophic and hypertrophic scarring.",
             services: ["Subcision", "Fat Grafting", "TCA Cross", "Microneedling RF"],
             rating: 4.7,
+            receptionist: "James",
             doctors: [
                 { id: 'dr6', name: "Dr. Samuel Lee", role: "Lead Surgeon", bio: "Specialist in Subcision & Scar Revision", certs: ["Board Certified"] }
             ]
@@ -632,6 +701,7 @@
             about: "Dedicated to acne management and hormonal skin health. We provide holistic plans that integrate medical treatment with nutritional guidance.",
             services: ["PDT Therapy", "Extractions", "Hormonal Panels", "Blue Light"],
             rating: 4.9,
+            receptionist: "Rebecca",
             doctors: [
                 { id: 'dr7', name: "Dr. Rebecca Storm", role: "Dermatologist", bio: "Focuses on Acne & Cystic Skin Health", certs: ["Board Certified", "Yale Med"] },
                 { id: 'dr8', name: "Dr. Kenji Sato", role: "Clinician", bio: "Hormonal Treatment Specialist", certs: ["Board Certified"] }
@@ -642,6 +712,7 @@
             about: "A regenerative therapy center focusing on skin quality and age reversal. We utilize biological factors and advanced topicals for long-term skin health.",
             services: ["Exosome Therapy", "PRF", "Polynucleotides", "Laser Toning"],
             rating: 4.9,
+            receptionist: "Olivia",
             doctors: [
                 { id: 'dr9', name: "Dr. Olivia Bennett", role: "Aesthetic Lead", bio: "Specialist in Regenerative Skin Therapy", certs: ["Board Certified", "Cambridge Med"] }
             ]
@@ -765,14 +836,17 @@
             return `
             <div class="clinic-post" id="clinic-post-${cIdx}">
                 <div class="clinic-post-header">
-                    <div class="header-main-info" onclick="openClinicProfile('${clinic}')">
-                        <div class="clinic-avatar">${clinic.split(' ').pop()}</div>
-                        <span class="clinic-post-name">${clinic}</span>
+                    <div class="clinic-header-left">
+                        <div class="clinic-avatar" onclick="openClinicProfile('${clinic}')">${clinic.split(' ').pop()}</div>
+                        <div class="header-text-stack">
+                            <span class="clinic-post-name" onclick="openClinicProfile('${clinic}')">${clinic}</span>
+                            <div class="review-link" onclick="openReviewSheet('${clinic}', '${item.name.replace(/'/g, "\\'")}')">
+                                <span class="rating-num">${profile.rating}</span>
+                                <div class="rating-stars-small">★★★★★</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="review-link" onclick="openReviewSheet('${clinic}', '${item.name.replace(/'/g, "\\'")}')">
-                        <span class="rating-num">${profile.rating}</span>
-                        <div class="rating-stars-small">★★★★★</div>
-                    </div>
+                    <button class="book-consult-btn" onclick="startConsultation('${clinic}', '${item.name.replace(/'/g, "\\'")}')">Free Consultation</button>
                 </div>
                 <div class="ba-container">
                     <div class="ba-swiper" onscroll="updateClinicDots(this)">
@@ -804,6 +878,104 @@
         
         overlay.style.display = 'block';
         setTimeout(() => overlay.classList.add('active'), 10);
+    }
+
+    // --- CONSULTATION FLOW LOGIC ---
+    let consultState = { clinic: null, concern: null, step: 0, answers: {} };
+    const leadQuestions = [
+        { id: 'time', q: "How long has this concern been bothering you?", opts: ["Less than 6 months", "6 months to 2 years", "Over 2 years"] },
+        { id: 'previous', q: "Have you tried professional treatments before?", opts: ["None yet", "A few over-the-counter", "Multiple clinical sessions"] },
+        { id: 'urgency', q: "How soon are you looking to start your transformation?", opts: ["Just researching", "Within the month", "Immediately"] },
+        { id: 'budget', q: "What is your approximate budget for treatment?", opts: ["Under $1k", "$1k - $5k", "$5k+"] }
+    ];
+
+    function startConsultation(clinic, concern) {
+        event.stopPropagation();
+        consultState = { clinic, concern, step: 0, answers: {} };
+        const overlay = document.getElementById('lead-overlay');
+        overlay.style.display = 'flex';
+        renderConsultStep();
+        setTimeout(() => overlay.classList.add('active'), 10);
+    }
+
+    function renderConsultStep() {
+        const content = document.getElementById('leadFlowContent');
+        const fill = document.getElementById('leadProgressFill');
+        const connecting = document.getElementById('leadConnecting');
+        const chat = document.getElementById('leadReceptionist');
+
+        // Reset visibility
+        content.style.display = 'flex';
+        connecting.style.display = 'none';
+        chat.style.display = 'none';
+
+        if (consultState.step < leadQuestions.length) {
+            const current = leadQuestions[consultState.step];
+            fill.style.width = `${(consultState.step / leadQuestions.length) * 100}%`;
+            content.innerHTML = `
+                <h2 class="lead-question">${current.q}</h2>
+                <div class="lead-options">
+                    ${current.opts.map(opt => `
+                        <button class="lead-opt" onclick="submitLeadAnswer('${current.id}', '${opt}')">${opt}</button>
+                    `).join('')}
+                </div>
+            `;
+        } else {
+            finishConsultation();
+        }
+    }
+
+    function submitLeadAnswer(id, val) {
+        consultState.answers[id] = val;
+        consultState.step++;
+        renderConsultStep();
+    }
+
+    function finishConsultation() {
+        const content = document.getElementById('leadFlowContent');
+        const fill = document.getElementById('leadProgressFill');
+        const connecting = document.getElementById('leadConnecting');
+        const chat = document.getElementById('leadReceptionist');
+
+        fill.style.width = '100%';
+        content.style.display = 'none';
+        connecting.style.display = 'block';
+
+        setTimeout(() => {
+            connecting.style.display = 'none';
+            chat.style.display = 'block';
+            renderReceptionistChat();
+        }, 1500);
+    }
+
+    function renderReceptionistChat() {
+        const chat = document.getElementById('leadReceptionist');
+        const clinic = CLINIC_PROFILES[consultState.clinic];
+        const concernData = DATA.find(d => d.name === consultState.concern);
+        const treatments = concernData.med.slice(0, 2).map(m => m.name).join(' or ');
+        
+        chat.innerHTML = `
+            <div class="chat-bubble">
+                <span class="chat-name">${clinic.receptionist} @ ${consultState.clinic}</span>
+                <p class="chat-msg">
+                    Hello! I've received your notes regarding <strong>${consultState.concern}</strong>.
+                    <br><br>
+                    Since you're looking to start <em>${consultState.answers.urgency.toLowerCase()}</em>, I've notified our lead clinician. We often recommend <strong>${treatments}</strong> for cases like yours.
+                    <br><br>
+                    Would you like to hop on a quick 10-minute diagnostic call today?
+                </p>
+            </div>
+            <div class="chat-actions">
+                <button class="chat-btn" onclick="closeConsultation()">Schedule Call</button>
+                <button class="chat-btn-sec" onclick="closeConsultation()">Send Photos First</button>
+            </div>
+        `;
+    }
+
+    function closeConsultation() {
+        const overlay = document.getElementById('lead-overlay');
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.style.display = 'none', 400);
     }
 
     function openReviewSheet(clinic, concern) {
@@ -970,11 +1142,11 @@
                 </div>
                 <div class="protocol-panel">
                     <div class="panel-header" onclick="togglePanel(this)"><h4>Skincare Ingredients</h4><span>${item.ing.length}</span></div>
-                    <div class="panel-body">${item.ing.map(i => `<div class="protocol-item"><span class="item-name">${i.name}</span><p class="item-desc">${i.desc}</p></div>`).join('')}</div>
+                    <div class="panel-body">${item.ing.map(i => `<div class=\"protocol-item\"><span class=\"item-name\">${i.name}</span><p class=\"item-desc\">${i.desc}</p></div>`).join('')}</div>
                 </div>
                 <div class="protocol-panel">
                     <div class="panel-header" onclick="togglePanel(this)"><h4>Dietary Protocols</h4><span>${item.diet.length}</span></div>
-                    <div class="panel-body">${item.diet.map(d => `<div class="protocol-item"><span class="item-name">${d.name}</span><p class="item-desc">${d.desc}</p></div>`).join('')}</div>
+                    <div class="panel-body">${item.diet.map(d => `<div class=\"protocol-item\"><span class=\"item-name\">${d.name}</span><p class=\"item-desc\">${d.desc}</p></div>`).join('')}</div>
                 </div>
             </div>
         `;
