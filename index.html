@@ -214,55 +214,52 @@
         .gallery-feed { 
             height: 100%;
             overflow-y: scroll;
-            scroll-snap-type: y mandatory;
             padding-top: 64px; /* Space for overlay header */
         }
 
-        /* Full Screen Clinic Post Snap */
+        /* Clinic Post Container */
         .clinic-post { 
-            height: calc(100dvh - 64px); 
             width: 100%;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
             display: flex;
             flex-direction: column;
-            padding-top: 20px;
+            padding: 24px 0 0 0;
             border-bottom: 1px solid var(--border);
         }
 
-        .clinic-post-header { padding: 0 20px 20px; display: flex; align-items: center; gap: 12px; }
+        .clinic-post-header { padding: 0 20px 16px; display: flex; align-items: center; gap: 12px; }
         .clinic-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 14px; }
         .clinic-post-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
         
         .ba-container {
             position: relative;
             width: 100%;
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
 
-        /* Horizontal Carousel for multiple transformations per clinic */
+        /* Swipable carousel for Before and After */
         .ba-swiper { 
             width: 100%;
             aspect-ratio: 4 / 3;
             display: flex; 
-            overflow-x: auto; 
-            scroll-snap-type: x mandatory; 
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
             background: #000;
             border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
         }
 
-        .ba-item { 
+        .ba-slide { 
             flex: 0 0 100%; 
             height: 100%; 
             scroll-snap-align: start; 
             display: flex; 
+            flex-direction: column; 
+            justify-content: flex-end; 
+            align-items: center; 
+            position: relative; 
         }
-        .ba-half { width: 50%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; }
-        .ba-half.before { background: #0A0A0A; border-right: 1px solid rgba(201, 149, 106, 0.2); }
-        .ba-half.after { background: #0E0E0E; }
+        .ba-slide.before { background: #0A0A0A; }
+        .ba-slide.after { background: #0E0E0E; }
         
         .ba-label { 
             position: absolute; bottom: 20px; 
@@ -274,14 +271,21 @@
             border-radius: 4px;
         }
 
-        .ba-dots {
+        /* Dots to show current carousel position */
+        .ba-pagination {
             display: flex;
             justify-content: center;
             gap: 6px;
-            padding: 15px 0;
+            padding: 12px 0 24px;
         }
-        .ba-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted); transition: all 0.3s ease; }
-        .ba-dot.active { background: var(--accent); transform: scale(1.2); }
+        .ba-dot { 
+            width: 5px; 
+            height: 5px; 
+            border-radius: 50%; 
+            background: var(--border); 
+            transition: all 0.2s ease;
+        }
+        .ba-dot.active { background: var(--accent); }
 
         /* Medical View Overlay */
         .protocol-view-container {
@@ -447,7 +451,8 @@
         dots.forEach((dot, i) => dot.classList.toggle('active', i === scrollIndex));
     }
 
-    function updateGalleryDots(swiper) {
+    // New dot updater for clinic horizontal carousel
+    function updateClinicDots(swiper) {
         const scrollIndex = Math.round(swiper.scrollLeft / swiper.offsetWidth);
         const dots = swiper.nextElementSibling.querySelectorAll('.ba-dot');
         dots.forEach((dot, i) => dot.classList.toggle('active', i === scrollIndex));
@@ -464,7 +469,7 @@
         document.getElementById('overlayTitle').textContent = item.name;
         protocolBtn.onclick = (e) => { e.stopPropagation(); openProtocol(item.name); };
         
-        // 5 Clinics with their own specific headers that scroll with them
+        // 5 Clinics with their own headers and swipable Before/After carousel
         const clinics = ['Test Clinic A', 'Test Clinic B', 'Test Clinic C', 'Test Clinic D', 'Test Clinic E'];
         
         content.innerHTML = clinics.map(clinic => `
@@ -474,18 +479,16 @@
                     <span class="clinic-post-name">${clinic}</span>
                 </div>
                 <div class="ba-container">
-                    <div class="ba-swiper" onscroll="updateGalleryDots(this)">
-                        ${[1, 2, 3, 4].map(() => `
-                            <div class="ba-item">
-                                <div class="ba-half before"><span class="ba-label">Before</span></div>
-                                <div class="ba-half after"><span class="ba-label">After</span></div>
-                            </div>
-                        `).join('')}
+                    <div class="ba-swiper" onscroll="updateClinicDots(this)">
+                        <div class="ba-slide before">
+                            <span class="ba-label">Before</span>
+                        </div>
+                        <div class="ba-slide after">
+                            <span class="ba-label">After</span>
+                        </div>
                     </div>
-                    <div class="ba-dots">
+                    <div class="ba-pagination">
                         <div class="ba-dot active"></div>
-                        <div class="ba-dot"></div>
-                        <div class="ba-dot"></div>
                         <div class="ba-dot"></div>
                     </div>
                 </div>
@@ -495,7 +498,7 @@
         overlay.style.display = 'block';
         setTimeout(() => {
             overlay.classList.add('active');
-            content.scrollTo({ top: 0 }); // Start at the top (Clinic A)
+            content.scrollTo({ top: 0 }); 
         }, 10);
     }
 
