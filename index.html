@@ -189,11 +189,30 @@
             padding: 0 20px; 
             position: absolute; top: 0; width: 100%;
             background: var(--bg); z-index: 100; 
-            display: flex; align-items: center; gap: 15px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            gap: 15px; 
             border-bottom: 1px solid var(--border); 
         }
+        .header-left { display: flex; align-items: center; gap: 15px; flex: 1; overflow: hidden; }
         .back-btn { background: none; border: none; cursor: pointer; color: var(--text-primary); font-size: 24px; display: flex; align-items: center; }
         .overlay-title { font-family: var(--font-heading); font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .protocol-mini-btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 7px 14px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: opacity 0.2s;
+        }
+        .protocol-mini-btn:active { opacity: 0.8; }
 
         .gallery-feed { 
             height: 100%;
@@ -210,7 +229,6 @@
             border-bottom: 1px solid var(--border); 
             display: flex;
             flex-direction: column;
-            padding-bottom: 80px; /* Room for protocol button */
         }
 
         .clinic-post-header { padding: 15px 20px; display: flex; align-items: center; gap: 10px; }
@@ -223,8 +241,6 @@
         .ba-half.before { background: #111; border-right: 1px solid rgba(201, 149, 106, 0.3); }
         .ba-half.after { background: #181818; }
         .ba-label { position: absolute; bottom: 12px; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 4px; }
-
-        .view-protocol-btn { position: fixed; bottom: 24px; left: 20px; right: 20px; background: var(--accent); color: var(--bg); height: 54px; border-radius: 14px; border: none; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 150; cursor: pointer; }
 
         /* Medical View Overlay (Inner) */
         .protocol-view-container {
@@ -273,10 +289,13 @@
 
 <div id="detail-overlay">
     <div class="overlay-header">
-        <button class="back-btn" onclick="closeDetail()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        </button>
-        <span class="overlay-title" id="overlayTitle">Gallery</span>
+        <div class="header-left">
+            <button class="back-btn" onclick="closeDetail()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <span class="overlay-title" id="overlayTitle">Gallery</span>
+        </div>
+        <button id="protocolHeaderBtn" class="protocol-mini-btn">Protocol</button>
     </div>
     <div id="detailContent" class="gallery-feed"></div>
 </div>
@@ -393,7 +412,12 @@
         const item = DATA.find(d => d.name === name);
         const overlay = document.getElementById('detail-overlay');
         const content = document.getElementById('detailContent');
+        const protocolBtn = document.getElementById('protocolHeaderBtn');
+        
         document.getElementById('overlayTitle').textContent = item.name;
+        
+        // Setup Protocol button in Header
+        protocolBtn.onclick = (e) => { e.stopPropagation(); openProtocol(item.name); };
         
         content.innerHTML = `
             ${['Clinic A', 'Clinic B', 'Clinic C'].map(clinic => `
@@ -410,7 +434,6 @@
                     </div>
                 </div>
             `).join('')}
-            <button class="view-protocol-btn" onclick="openProtocol('${item.name.replace(/'/g, "\\'")}')">View Clinical Protocol →</button>
         `;
         
         overlay.style.display = 'block';
