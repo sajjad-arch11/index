@@ -230,7 +230,19 @@
         }
 
         .clinic-post-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; justify-content: space-between; }
-        .header-main-info { display: flex; align-items: center; gap: 12px; }
+        
+        .header-main-info { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            cursor: pointer;
+            padding: 4px 8px;
+            margin-left: -8px;
+            border-radius: 12px;
+            transition: background 0.2s ease;
+        }
+        .header-main-info:active { background: var(--surface); }
+
         .clinic-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 14px; }
         .clinic-post-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
         
@@ -332,14 +344,31 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 3000;
             display: none; transform: translateY(100%); transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
         #review-overlay.active { display: block; transform: translateY(0); }
         
+        .doctor-selector {
+            display: flex; gap: 12px; overflow-x: auto;
+            padding: 15px 20px; background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            scrollbar-width: none;
+        }
+        .dr-chip {
+            flex: 0 0 auto; display: flex; align-items: center; gap: 8px;
+            padding: 6px 12px 6px 6px; border-radius: 999px;
+            background: var(--surface); border: 1px solid var(--border);
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .dr-chip.active { border-color: var(--accent); background: var(--elevated); }
+        .dr-chip-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 10px; }
+        .dr-chip-name { font-size: 12px; font-weight: 600; white-space: nowrap; }
+
         .review-header {
             position: sticky; top: 0; z-index: 10;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
-            padding: 24px 20px;
+            padding: 24px 20px 20px;
         }
         .review-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
         .dr-profile { display: flex; gap: 16px; }
@@ -356,7 +385,7 @@
             font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--accent); letter-spacing: 0.05em;
         }
 
-        .review-feed { height: calc(100% - 180px); overflow-y: auto; padding: 20px; }
+        .review-feed { height: calc(100% - 200px); overflow-y: auto; padding: 20px; }
         .review-feed-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; letter-spacing: 0.05em; }
 
         .insta-comment { display: flex; gap: 12px; margin-bottom: 24px; animation: fadeIn 300ms ease forwards; }
@@ -367,6 +396,45 @@
         .rating-stars { display: flex; gap: 2px; color: var(--gold); font-size: 10px; }
         .comment-text { font-size: 14px; color: var(--text-primary); line-height: 1.4; margin-bottom: 6px; }
         .comment-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+        /* --- CLINIC PROFILE OVERLAY --- */
+        #clinic-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 3000;
+            display: none; transform: translateY(100%); transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+        #clinic-overlay.active { display: block; transform: translateY(0); }
+        
+        .clinic-hero {
+            padding: 40px 20px 30px;
+            background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+        }
+        .hero-close { position: absolute; top: 20px; right: 20px; background: var(--border); border: none; padding: 8px; border-radius: 50%; color: var(--text-primary); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .clinic-hero-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--accent); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; color: var(--bg); border: 4px solid var(--bg); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .clinic-hero h1 { font-family: var(--font-heading); font-size: 32px; margin-bottom: 8px; color: var(--text-primary); }
+        
+        .clinic-meta-row { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .clinic-profile-rating { display: flex; align-items: center; gap: 6px; background: var(--border); padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 14px; color: var(--gold); }
+        .clinic-location-chip { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+
+        .profile-section { padding: 24px 20px; }
+        .profile-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 800; margin-bottom: 16px; }
+        
+        .about-text { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+        
+        .services-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+        .service-pill { background: var(--surface); border: 1px solid var(--border); padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; color: var(--text-primary); }
+
+        .team-scroll { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .team-card { flex: 0 0 200px; background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius-md); }
+        .team-dr-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--accent); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--bg); }
+        .team-dr-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; display: block; }
+        .team-dr-role { font-size: 12px; color: var(--text-muted); font-weight: 600; }
 
         /* Protocol Overlay */
         .protocol-view-container {
@@ -427,9 +495,14 @@
     <div id="detailContent" class="gallery-feed"></div>
 </div>
 
-<!-- CLINIC REVIEW OVERLAY -->
+<!-- REVIEW OVERLAY (RESTORED) -->
 <div id="review-overlay">
-    <div id="reviewSheetContent" style="height:100%"></div>
+    <div id="reviewSheetContent" style="height:100%; display: flex; flex-direction: column;"></div>
+</div>
+
+<!-- CLINIC PROFILE OVERLAY -->
+<div id="clinic-overlay">
+    <div id="clinicProfileContent"></div>
 </div>
 
 <div class="sheet-overlay" onclick="toggleSettings()"></div>
@@ -468,6 +541,66 @@
       }
     ];
 
+    // Comprehensive Clinic Data
+    const CLINIC_PROFILES = {
+        'Clinic A': {
+            location: "102 Beverly Hills, West Wing",
+            about: "A premier aesthetic destination specializing in high-tech skin reconstruction and longevity protocols. Established in 2015, we prioritize clinical excellence and artistic natural results.",
+            services: ["Fractional CO2", "Sculptra", "Custom Peels", "Lymphatic Drainage"],
+            rating: 4.9,
+            doctors: [
+                { id: 'dr1', name: "Dr. Sarah Chen, MD", role: "Lead Clinician", bio: "Specialist in Advanced Laser Resurfacing", certs: ["Board Certified", "Harvard Med", "AAAM Member"] },
+                { id: 'dr2', name: "Dr. Marcus Thorne", role: "Aesthetic Specialist", bio: "Expert in Microneedling & Chemical Peels", certs: ["Board Certified", "Stanford Med"] },
+                { id: 'dr3', name: "Nurse Elena G.", role: "Clinical Lead", bio: "Specialized in Post-Operative Skin Care", certs: ["Certified Nurse", "Fellowship Trained"] }
+            ]
+        },
+        'Clinic B': {
+            location: "55 Madison Ave, New York",
+            about: "Focusing on laser innovation and pigmentary disorders. Our clinic house state-of-the-art picosecond lasers and advanced chemical analysis for custom skincare.",
+            services: ["Picosecond Laser", "IPL", "Deep Peels", "Visia Skin Analysis"],
+            rating: 4.8,
+            doctors: [
+                { id: 'dr4', name: "Dr. Julian Voss", role: "Medical Director", bio: "Pioneer in Picosecond Laser Technology", certs: ["Board Certified", "UCSF Alumni"] },
+                { id: 'dr5', name: "Dr. Amy Wright", role: "Dermatologist", bio: "Expert in Melasma & Pigmentation", certs: ["Board Certified", "Mayo Clinic Trained"] }
+            ]
+        },
+        'Clinic C': {
+            location: "Harley Street, London",
+            about: "Specialized in surgical scar revision and subcision. We handle complex reconstructive cases for atrophic and hypertrophic scarring.",
+            services: ["Subcision", "Fat Grafting", "TCA Cross", "Microneedling RF"],
+            rating: 4.7,
+            doctors: [
+                { id: 'dr6', name: "Dr. Samuel Lee", role: "Lead Surgeon", bio: "Specialist in Subcision & Scar Revision", certs: ["Board Certified"] }
+            ]
+        },
+        'Clinic D': {
+            location: "Oakwood Plaza, Chicago",
+            about: "Dedicated to acne management and hormonal skin health. We provide holistic plans that integrate medical treatment with nutritional guidance.",
+            services: ["PDT Therapy", "Extractions", "Hormonal Panels", "Blue Light"],
+            rating: 4.9,
+            doctors: [
+                { id: 'dr7', name: "Dr. Rebecca Storm", role: "Dermatologist", bio: "Focuses on Acne & Cystic Skin Health", certs: ["Board Certified", "Yale Med"] },
+                { id: 'dr8', name: "Dr. Kenji Sato", role: "Clinician", bio: "Hormonal Treatment Specialist", certs: ["Board Certified"] }
+            ]
+        },
+        'Clinic E': {
+            location: "Seaside Drive, Miami",
+            about: "A regenerative therapy center focusing on skin quality and age reversal. We utilize biological factors and advanced topicals for long-term skin health.",
+            services: ["Exosome Therapy", "PRF", "Polynucleotides", "Laser Toning"],
+            rating: 4.9,
+            doctors: [
+                { id: 'dr9', name: "Dr. Olivia Bennett", role: "Aesthetic Lead", bio: "Specialist in Regenerative Skin Therapy", certs: ["Board Certified", "Cambridge Med"] }
+            ]
+        }
+    };
+
+    const MOCK_REVIEWS = [
+        { user: "skin_enthusiast", rating: 5, text: "Absolutely changed my life. The doctor was so meticulous with the laser settings.", time: "2d" },
+        { user: "glow_seeker99", rating: 4, text: "Great results but the recovery time was slightly longer than expected. Staff was amazing though.", time: "1w" },
+        { user: "james_r", rating: 5, text: "I've tried everything for these scars. 3 sessions in and the improvement is 80%. Worth every penny.", time: "2w" },
+        { user: "muna_skincare", rating: 4, text: "Professional environment and clear expectations.", time: "1mo" }
+    ];
+
     const DATA = RAW_DATA.flatMap(catGroup => 
         catGroup.concerns.map(c => ({
             name: c.name,
@@ -477,13 +610,6 @@
             diet: c.diet.map(d => ({ name: d, desc: "Internal protocol to optimize health." }))
         }))
     );
-
-    const MOCK_REVIEWS = [
-        { user: "skin_enthusiast", rating: 5, text: "Absolutely changed my life. Dr. Sarah was so meticulous with the laser settings.", time: "2d" },
-        { user: "glow_seeker99", rating: 4, text: "Great results but the recovery time was slightly longer than expected. Staff was amazing though.", time: "1w" },
-        { user: "james_r", rating: 5, text: "I've tried everything for these scars. 3 sessions in and the improvement is 80%. Worth every penny.", time: "2w" },
-        { user: "muna_skincare", rating: 4, text: "Professional environment and clear expectations.", time: "1mo" }
-    ];
 
     const CAT_COLORS = { "Texture & Scarring": "#7C6AF5", "Pigmentation": "#E8A838", "Acne & Breakouts": "#E85D5D" };
     let activeCat = "All";
@@ -517,7 +643,6 @@
         grid.innerHTML = filtered.map(item => `
             <div class="concern-card" onclick="openGallery('${item.name.replace(/'/g, "\\'")}')">
                 <div class="card-header"><h3>${item.name}</h3></div>
-                
                 <div style="position:relative; flex-grow:1; display:flex; flex-direction:column;">
                     <div class="card-carousel" onscroll="updateDots(this)">
                         <div class="carousel-item"></div>
@@ -530,7 +655,6 @@
                         <div class="feed-dot"></div>
                     </div>
                 </div>
-
                 <div class="card-footer">
                     <span class="cat-tag" style="background: ${CAT_COLORS[item.cat]}20; color: ${CAT_COLORS[item.cat]}">${item.cat}</span>
                     <div class="arrow-hint">Explore Results →</div>
@@ -550,10 +674,8 @@
         if (slideWidth === 0) return;
         const slideIndex = Math.round(swiper.scrollLeft / slideWidth);
         const caseIndex = Math.floor(slideIndex / 2);
-        const isAfter = (slideIndex % 2 !== 0);
         const post = swiper.closest('.clinic-post');
         post.querySelectorAll('.case-card').forEach((card, i) => card.classList.toggle('active', i === caseIndex));
-        post.querySelectorAll('.ba-dot').forEach((dot, i) => dot.classList.toggle('active', i === (isAfter ? 1 : 0)));
     }
 
     searchInput.addEventListener('input', renderConcerns);
@@ -567,18 +689,20 @@
         document.getElementById('overlayTitle').textContent = item.name;
         protocolBtn.onclick = (e) => { e.stopPropagation(); openProtocol(item.name); };
         
-        const clinics = ['Clinic A', 'Clinic B', 'Clinic C', 'Clinic D', 'Clinic E'];
+        const clinics = Object.keys(CLINIC_PROFILES);
         const totalCasesPerClinic = 6;
         
-        content.innerHTML = clinics.map((clinic, cIdx) => `
+        content.innerHTML = clinics.map((clinic, cIdx) => {
+            const profile = CLINIC_PROFILES[clinic];
+            return `
             <div class="clinic-post" id="clinic-post-${cIdx}">
                 <div class="clinic-post-header">
-                    <div class="header-main-info">
+                    <div class="header-main-info" onclick="openClinicProfile('${clinic}')">
                         <div class="clinic-avatar">${clinic.split(' ').pop()}</div>
                         <span class="clinic-post-name">${clinic}</span>
                     </div>
                     <div class="review-link" onclick="openReviewSheet('${clinic}', '${item.name.replace(/'/g, "\\'")}')">
-                        <span class="rating-num">4.9</span>
+                        <span class="rating-num">${profile.rating}</span>
                         <div class="rating-stars-small">★★★★★</div>
                     </div>
                 </div>
@@ -592,10 +716,6 @@
                                 <span class="ba-label">After</span>
                             </div>
                         `).join('')}
-                    </div>
-                    <div class="ba-pagination">
-                        <div class="ba-dot active"></div>
-                        <div class="ba-dot"></div>
                     </div>
                 </div>
                 <div class="other-cases-section">
@@ -612,26 +732,32 @@
                     </div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
         
         overlay.style.display = 'block';
         setTimeout(() => overlay.classList.add('active'), 10);
     }
 
+    // RESTORED REVIEW SHEET LOGIC
     function openReviewSheet(clinic, concern) {
         const overlay = document.getElementById('review-overlay');
         const sheet = document.getElementById('reviewSheetContent');
-        const drName = "Dr. Sarah Chen, MD";
+        const doctors = CLINIC_PROFILES[clinic]?.doctors || [];
         
-        sheet.innerHTML = `
-            <div class="review-header">
+        window.renderDoctorDetails = (drId) => {
+            const dr = doctors.find(d => d.id === drId) || doctors[0];
+            const profileArea = document.getElementById('dr-profile-area');
+            const feedArea = document.getElementById('review-feed-area');
+            document.querySelectorAll('.dr-chip').forEach(c => c.classList.toggle('active', c.dataset.id === drId));
+
+            profileArea.innerHTML = `
                 <div class="review-header-top">
                     <div class="dr-profile">
                         <div class="dr-avatar"></div>
                         <div class="dr-info">
-                            <h2>${drName}</h2>
-                            <p>Lead Clinician at ${clinic}</p>
-                            <p style="color:var(--gold); margin-top:2px; font-weight:700;">★ 4.9 · Specialist in ${concern}</p>
+                            <h2>${dr.name}</h2>
+                            <p>${dr.role} at ${clinic}</p>
+                            <p style="color:var(--gold); margin-top:2px; font-weight:700;">★ ${CLINIC_PROFILES[clinic].rating} · ${dr.bio}</p>
                         </div>
                     </div>
                     <button class="back-btn" onclick="closeReviewSheet()">
@@ -639,13 +765,11 @@
                     </button>
                 </div>
                 <div class="dr-certifications">
-                    <div class="cert-pill">Board Certified</div>
-                    <div class="cert-pill">AAAM Member</div>
-                    <div class="cert-pill">Clinical Fellow</div>
-                    <div class="cert-pill">Harvard Med</div>
+                    ${dr.certs?.map(c => `<div class="cert-pill">${c}</div>`).join('') || ''}
                 </div>
-            </div>
-            <div class="review-feed">
+            `;
+
+            feedArea.innerHTML = `
                 <div class="review-feed-title">Reviews for ${concern}</div>
                 ${MOCK_REVIEWS.map(r => `
                     <div class="insta-comment">
@@ -663,6 +787,79 @@
                         </div>
                     </div>
                 `).join('')}
+            `;
+        };
+
+        sheet.innerHTML = `
+            <div class="doctor-selector">
+                ${doctors.map(dr => `
+                    <div class="dr-chip" data-id="${dr.id}" onclick="renderDoctorDetails('${dr.id}')">
+                        <div class="dr-chip-avatar">${dr.name.split(' ').pop()[0]}</div>
+                        <span class="dr-chip-name">${dr.name.split(',')[0]}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="review-header" id="dr-profile-area"></div>
+            <div class="review-feed" id="review-feed-area"></div>
+        `;
+
+        overlay.style.display = 'block';
+        setTimeout(() => {
+            overlay.classList.add('active');
+            renderDoctorDetails(doctors[0]?.id);
+        }, 10);
+    }
+
+    function closeReviewSheet() {
+        const overlay = document.getElementById('review-overlay');
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.style.display = 'none', 400);
+    }
+
+    function openClinicProfile(clinicName) {
+        const overlay = document.getElementById('clinic-overlay');
+        const content = document.getElementById('clinicProfileContent');
+        const profile = CLINIC_PROFILES[clinicName];
+        
+        content.innerHTML = `
+            <div class="clinic-hero">
+                <button class="hero-close" onclick="closeClinicProfile()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+                <div class="clinic-hero-avatar">${clinicName.split(' ').pop()}</div>
+                <h1>${clinicName}</h1>
+                <div class="clinic-meta-row">
+                    <div class="clinic-profile-rating">★ ${profile.rating}</div>
+                    <div class="clinic-location-chip">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        ${profile.location}
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <div class="profile-section-title">About the Clinic</div>
+                <p class="about-text">${profile.about}</p>
+            </div>
+
+            <div class="profile-section">
+                <div class="profile-section-title">Services Offered</div>
+                <div class="services-grid">
+                    ${profile.services.map(s => `<div class="service-pill">${s}</div>`).join('')}
+                </div>
+            </div>
+
+            <div class="profile-section" style="padding-bottom: 60px;">
+                <div class="profile-section-title">Our Team</div>
+                <div class="team-scroll">
+                    ${profile.doctors.map(dr => `
+                        <div class="team-card">
+                            <div class="team-dr-avatar">${dr.name.split(' ').pop()[0]}</div>
+                            <span class="team-dr-name">${dr.name}</span>
+                            <span class="team-dr-role">${dr.role}</span>
+                        </div>
+                    `).join('')}
+                </div>
             </div>
         `;
 
@@ -670,8 +867,8 @@
         setTimeout(() => overlay.classList.add('active'), 10);
     }
 
-    function closeReviewSheet() {
-        const overlay = document.getElementById('review-overlay');
+    function closeClinicProfile() {
+        const overlay = document.getElementById('clinic-overlay');
         overlay.classList.remove('active');
         setTimeout(() => overlay.style.display = 'none', 400);
     }
