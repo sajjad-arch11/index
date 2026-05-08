@@ -244,23 +244,25 @@
             padding: 0 10px; 
         }
 
-        /* Continuous Linear Swiper */
+        /* One-by-One Swiper */
         .ba-swiper { 
             width: 100%;
             flex-grow: 1;
             display: flex; 
             overflow-x: auto;
+            /* Use mandatory snapping to ensure it stays on a slide */
             scroll-snap-type: x mandatory;
             background: #000;
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            scroll-padding: 0;
+            -webkit-overflow-scrolling: touch;
         }
 
         .ba-slide { 
             flex: 0 0 100%; 
             height: 100%; 
+            /* scroll-snap-stop: always ensures you can't skip past slides in one flick */
             scroll-snap-align: start; 
             scroll-snap-stop: always;
             display: flex; 
@@ -268,11 +270,6 @@
             justify-content: center; 
             align-items: center; 
             position: relative; 
-        }
-        
-        /* The "Hard Swipe" Logic Gap */
-        .ba-slide.after:not(:last-child) {
-            margin-right: 120px; 
         }
 
         .ba-slide.before { background: linear-gradient(135deg, #111, #000); }
@@ -299,7 +296,7 @@
             border: 1px solid var(--border);
         }
 
-        /* Dots indicator */
+        /* Pagination dots */
         .ba-pagination {
             display: flex;
             justify-content: center;
@@ -543,20 +540,15 @@
         const slideWidth = swiper.offsetWidth;
         if (slideWidth === 0) return;
         
-        const gap = 120;
-        const totalPairWidth = (slideWidth * 2) + gap;
+        // Linear index of the current slide (0 to N-1)
         const currentScroll = swiper.scrollLeft;
+        const slideIndex = Math.round(currentScroll / slideWidth);
 
-        // Current transformation index
-        const caseIndex = Math.round(currentScroll / totalPairWidth);
+        // Transformation pair index (0, 1, 2...)
+        const caseIndex = Math.floor(slideIndex / 2);
         
-        // Relative position within the current Before/After pair
-        const relativeScroll = currentScroll % totalPairWidth;
-        
-        // Logic to determine Before/After status:
-        // We are on "After" if the relative scroll position is closer to the 1st slide width
-        // than it is to the 0th position (start of the pair).
-        const isAfter = Math.abs(relativeScroll - slideWidth) < Math.abs(relativeScroll - 0);
+        // Local index within the pair (0 = Before, 1 = After)
+        const isAfter = (slideIndex % 2 !== 0);
         
         const post = swiper.closest('.clinic-post');
         
@@ -569,7 +561,7 @@
         // Update the B/A status indicator (the 2 dots)
         const baDots = swiper.nextElementSibling.querySelectorAll('.ba-dot');
         baDots.forEach((dot, i) => {
-            // Dot 0 active for Before, Dot 1 active for After
+            // Dot 0 is active for Before (index 0), Dot 1 is active for After (index 1)
             dot.classList.toggle('active', i === (isAfter ? 1 : 0));
         });
     }
@@ -638,9 +630,8 @@
     function switchCase(card, clinicIdx, caseIdx) {
         const post = document.getElementById(`clinic-post-${clinicIdx}`);
         const swiper = post.querySelector('.ba-swiper');
-        const totalPairWidth = (swiper.offsetWidth * 2) + 120;
-        
-        const targetX = caseIdx * totalPairWidth;
+        // Calculate X position based on linear sequence: case index * 2 * slideWidth
+        const targetX = caseIdx * 2 * swiper.offsetWidth;
         swiper.scrollTo({ left: targetX, behavior: 'smooth' });
     }
 
