@@ -241,7 +241,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            padding: 0 10px 40px; /* Some breathing room from edges */
+            padding: 0 10px; 
         }
 
         /* Swipable carousel for Before and After within the Reel */
@@ -254,7 +254,7 @@
             background: #000;
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
         .ba-slide { 
@@ -296,7 +296,7 @@
             display: flex;
             justify-content: center;
             gap: 8px;
-            padding: 20px 0 10px;
+            padding: 12px 0;
         }
         .ba-dot { 
             width: 6px; 
@@ -306,6 +306,55 @@
             transition: all 0.3s ease;
         }
         .ba-dot.active { background: var(--accent); transform: scale(1.3); }
+
+        /* --- OTHER CASES HORIZONTAL SCROLL --- */
+        .other-cases-section {
+            padding-bottom: 24px;
+        }
+        .other-cases-label {
+            padding: 0 20px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+        .other-cases-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 0 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .case-card {
+            flex: 0 0 110px;
+            aspect-ratio: 4/5;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .case-card-split {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+        .case-half { flex: 1; height: 100%; position: relative; }
+        .case-half.before { background: #111; border-right: 0.5px solid var(--border); }
+        .case-half.after { background: #1a1a1a; }
+        .case-half::after {
+            content: 'B';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            font-weight: 900;
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+        .case-half.after::after { content: 'A'; }
 
         /* Medical View Overlay */
         .protocol-view-container {
@@ -508,6 +557,19 @@
                     <div class="ba-pagination">
                         <div class="ba-dot active"></div>
                         <div class="ba-dot"></div>
+                    </div>
+                </div>
+                <div class="other-cases-section">
+                    <div class="other-cases-label">More transformations from this clinic</div>
+                    <div class="other-cases-scroll">
+                        ${[1, 2, 3, 4, 5, 6].map(i => `
+                            <div class="case-card">
+                                <div class="case-card-split">
+                                    <div class="case-half before"></div>
+                                    <div class="case-half after"></div>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             </div>
