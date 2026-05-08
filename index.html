@@ -10,7 +10,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0D0D0D">
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22SkinFlow%22,%22short_name%22:%22SkinFlow%22,%22start_url%22:%22index.html%22,%22display%22:%22standalone%22,%22background_color%22:%22%230D0D0D%22,%22theme_color%22:%22%23C9956A%22}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,7 +44,11 @@
             overflow: hidden;
         }
 
-        /* --- FIXED GREEN PART (HEADER) --- */
+        /* Hide Scrollbars Globally */
+        ::-webkit-scrollbar { display: none; }
+        * { scrollbar-width: none; -ms-overflow-style: none; }
+
+        /* --- FIXED HEADER --- */
         .fixed-header {
             position: fixed;
             top: 0;
@@ -80,9 +83,7 @@
             gap: 8px;
             overflow-x: auto;
             padding: 12px 0 16px;
-            scrollbar-width: none;
         }
-        .category-scroll::-webkit-scrollbar { display: none; }
         .cat-pill {
             flex: 0 0 auto;
             padding: 8px 18px;
@@ -93,19 +94,17 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         .cat-pill.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 
-        /* --- SCROLLABLE RED PART (REELS FEED) --- */
+        /* --- SCROLLABLE FEED --- */
         .concern-grid {
             margin-top: 175px; 
             height: calc(100dvh - 175px);
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
         }
-        .concern-grid::-webkit-scrollbar { display: none; }
 
         .concern-card {
             height: 100%;
@@ -128,19 +127,17 @@
             line-height: 1.1;
         }
 
-        /* Feed Instagram-Style Carousel */
         .card-carousel {
             flex-grow: 1;
             display: flex;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            scrollbar-width: none;
             width: 100%;
             border-radius: var(--radius-lg);
             background: #000;
             border: 1px solid var(--border);
+            position: relative;
         }
-        .card-carousel::-webkit-scrollbar { display: none; }
         
         .carousel-item {
             flex: 0 0 100%;
@@ -152,10 +149,16 @@
             background: linear-gradient(135deg, #1A1A1A 0%, #222 100%);
             position: relative;
         }
-        .carousel-item::after { content: 'Reference View'; font-size: 10px; text-transform: uppercase; color: var(--text-muted); opacity: 0.4; }
+        .carousel-item::after { 
+            content: 'Reference Case View'; 
+            font-size: 10px; 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            opacity: 0.6; 
+            letter-spacing: 0.1em;
+        }
         .carousel-item:nth-child(even) { background: linear-gradient(135deg, #222 0%, #1A1A1A 100%); }
 
-        /* Carousel Progress Dots Overlay */
         .carousel-dots-overlay {
             display: flex;
             justify-content: center;
@@ -173,45 +176,80 @@
         .cat-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
         .arrow-hint { color: var(--text-muted); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
 
-        /* --- TRANSFORMATION GALLERY OVERLAY --- */
+        /* --- DETAIL OVERLAY (GALLERY) --- */
         #detail-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 2000; overflow-y: auto;
+            background: var(--bg); z-index: 2000;
             display: none; transform: translateX(100%); transition: transform var(--transition);
         }
         #detail-overlay.active { display: block; transform: translateX(0); }
         
-        .overlay-header { padding: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--border); }
+        .overlay-header { 
+            height: 64px;
+            padding: 0 20px; 
+            position: absolute; top: 0; width: 100%;
+            background: var(--bg); z-index: 100; 
+            display: flex; align-items: center; gap: 15px; 
+            border-bottom: 1px solid var(--border); 
+        }
         .back-btn { background: none; border: none; cursor: pointer; color: var(--text-primary); font-size: 24px; display: flex; align-items: center; }
-        .overlay-title { font-family: var(--font-heading); font-size: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .overlay-title { font-family: var(--font-heading); font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .gallery-feed { padding: 0 0 100px; }
-        .clinic-post { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .gallery-feed { 
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            padding-top: 64px; /* Offset for header */
+        }
+
+        .clinic-post { 
+            height: calc(100% - 64px); 
+            width: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            border-bottom: 1px solid var(--border); 
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 80px; /* Room for protocol button */
+        }
+
         .clinic-post-header { padding: 15px 20px; display: flex; align-items: center; gap: 10px; }
         .clinic-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 12px; }
         .clinic-post-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
         
-        .ba-swiper { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; width: 100%; }
-        .ba-swiper::-webkit-scrollbar { display: none; }
-        .ba-item { flex: 0 0 100%; aspect-ratio: 3 / 2; scroll-snap-align: start; display: flex; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .ba-swiper { flex-grow: 1; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; }
+        .ba-item { flex: 0 0 100%; height: 100%; scroll-snap-align: start; display: flex; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
         .ba-half { width: 50%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         .ba-half.before { background: #111; border-right: 1px solid rgba(201, 149, 106, 0.3); }
         .ba-half.after { background: #181818; }
         .ba-label { position: absolute; bottom: 12px; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 4px; }
 
-        .view-protocol-btn { position: fixed; bottom: 24px; left: 20px; right: 20px; background: var(--accent); color: var(--bg); height: 54px; border-radius: 14px; border: none; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 150; }
+        .view-protocol-btn { position: fixed; bottom: 24px; left: 20px; right: 20px; background: var(--accent); color: var(--bg); height: 54px; border-radius: 14px; border: none; font-weight: 700; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 150; cursor: pointer; }
 
-        /* Medical View */
-        .protocol-view { padding: 20px; animation: fadeIn 0.4s ease; }
-        .protocol-title { font-family: var(--font-heading); font-size: 38px; margin-bottom: 24px; line-height: 1; }
+        /* Medical View Overlay (Inner) */
+        .protocol-view-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; overflow-y: auto; padding: 20px; padding-top: 80px;
+        }
+        .protocol-view { animation: fadeIn 0.4s ease; }
+        .protocol-title { font-family: var(--font-heading); font-size: 32px; margin-bottom: 24px; line-height: 1.1; }
         .protocol-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 12px; overflow: hidden; }
-        .panel-header { padding: 24px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .panel-header h4 { font-size: 16px; font-weight: 600; text-transform: uppercase; color: var(--accent); }
-        .panel-body { display: none; padding: 0 24px 24px; }
+        .panel-header { padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .panel-header h4 { font-size: 14px; font-weight: 600; text-transform: uppercase; color: var(--accent); letter-spacing: 0.05em; }
+        .panel-header span { font-size: 12px; background: var(--border); padding: 2px 8px; border-radius: 10px; color: var(--text-secondary); }
+        .panel-body { display: none; padding: 0 20px 20px; }
         .panel-body.open { display: block; }
         .protocol-item { border-top: 1px solid var(--border); padding: 16px 0; }
-        .item-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; display: block; }
+        .protocol-item:first-child { border-top: none; }
+        .item-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; display: block; color: var(--text-primary); }
         .item-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.4; }
+
+        /* Settings Sheet */
+        .sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: none; }
+        .sheet-overlay.active { display: block; }
+        #settings-sheet { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface); z-index: 3001; border-radius: 30px 30px 0 0; padding: 40px 20px 20px; transform: translateY(100%); transition: transform var(--transition); }
+        #settings-sheet.active { transform: translateY(0); }
+        .sheet-link { display: block; padding: 18px 0; border-bottom: 1px solid var(--border); color: var(--text-primary); text-decoration: none; font-weight: 500; }
+        .sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -222,7 +260,7 @@
     <header>
         <span class="wordmark">SkinFlow</span>
         <button class="settings-trigger" onclick="toggleSettings()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </button>
     </header>
     <div class="search-area">
@@ -240,11 +278,12 @@
         </button>
         <span class="overlay-title" id="overlayTitle">Gallery</span>
     </div>
-    <div id="detailContent"></div>
+    <div id="detailContent" class="gallery-feed"></div>
 </div>
 
 <div class="sheet-overlay" onclick="toggleSettings()"></div>
 <div id="settings-sheet">
+    <div class="sheet-handle"></div>
     <a href="#" class="sheet-link">About SkinFlow</a>
     <a href="#" class="sheet-link">Medical Disclaimer</a>
     <a href="#" class="sheet-link">Privacy Policy</a>
@@ -255,24 +294,25 @@
       {
         cat: "Texture & Scarring",
         concerns: [
-          { name: "Acne scars (atrophic / ice pick / boxcar / rolling)", med: ["CO2 fractional laser", "Erbium laser resurfacing", "Microneedling RF (Morpheus8)", "Subcision", "TCA cross", "Dermal fillers", "PRP", "CROSS"], ing: ["Retinoids (tretinoin)", "Bakuchiol", "Vitamin C 20%", "Niacinamide", "AHA (glycolic)", "Peptides", "Centella asiatica"], diet: ["Collagen supplements", "Vitamin C foods", "Zinc foods", "Omega-3s", "Bone broth", "Avoid high-GI"] },
-          { name: "Hypertrophic scars & keloids", med: ["Steroid injections", "Pulsed dye laser (PDL)", "Cryotherapy", "Surgical excision", "Silicone sheets", "5-FU injections"], ing: ["Silicone serums", "Onion extract", "Centella asiatica", "Vitamin E oil"], diet: ["Anti-inflammatory diet", "Vitamin C", "Reduce sugar", "Protein intake"] },
-          { name: "Rough / uneven skin texture", med: ["Microdermabrasion", "Chemical peels", "Dermaplaning", "Fractional laser", "HydraFacial"], ing: ["AHA (glycolic)", "BHA (salicylic)", "PHA", "Retinoids", "Urea 10%", "Niacinamide"], diet: ["Hydration 3L", "Vitamin A foods", "Biotin", "Collagen foods"] },
-          { name: "Enlarged pores", med: ["Fractional laser", "Microneedling", "Salicylic peels", "Micro-botox"], ing: ["Salicylic acid 2%", "Niacinamide 10%", "Retinoids", "Clay", "Azelaic acid", "Zinc"], diet: ["Low-dairy", "Low-GI foods", "Zinc supplement", "Antioxidants"] }
+          { name: "Acne scars (atrophic / ice pick / rolling)", med: ["CO2 fractional laser", "Microneedling RF", "Subcision", "TCA cross"], ing: ["Retinoids (tretinoin)", "Vitamin C 20%", "Niacinamide", "Peptides"], diet: ["Collagen supplements", "Zinc foods", "Omega-3s"] },
+          { name: "Hypertrophic scars & keloids", med: ["Steroid injections", "Pulsed dye laser (PDL)", "Cryotherapy", "Silicone sheets"], ing: ["Silicone serums", "Onion extract", "Vitamin E oil"], diet: ["Anti-inflammatory diet", "Vitamin C", "Protein intake"] },
+          { name: "Rough / uneven skin texture", med: ["Chemical peels", "Dermaplaning", "Fractional laser", "HydraFacial"], ing: ["AHA (glycolic)", "BHA (salicylic)", "Retinoids", "Urea 10%"], diet: ["Hydration 3L", "Vitamin A foods", "Biotin"] },
+          { name: "Enlarged pores", med: ["Fractional laser", "Microneedling", "Salicylic peels", "Micro-botox"], ing: ["Salicylic acid 2%", "Niacinamide 10%", "Clay", "Azelaic acid"], diet: ["Low-dairy", "Zinc supplement", "Antioxidants"] }
         ]
       },
       {
         cat: "Pigmentation",
         concerns: [
-          { name: "Melasma", med: ["Jessner Peels", "IPL", "Oral Tranexamic Acid", "Picosecond laser", "Mesotherapy"], ing: ["Hydroquinone 4%", "Tranexamic acid 5%", "Kojic acid", "Azelaic acid 20%", "Alpha arbutin", "Vitamin C", "SPF 50+"], diet: ["Anti-inflammatory", "Avoid phytoestrogens", "Polyphenols", "Vitamin D", "Limit alcohol"] },
-          { name: "Post-inflammatory hyperpigmentation (PIH)", med: ["Chemical peels", "Microneedling", "Low-fluence laser", "LED light therapy"], ing: ["Niacinamide 10%", "Alpha arbutin 2%", "Kojic acid", "Tranexamic acid", "Vitamin C", "Azelaic acid", "SPF 50+"], diet: ["Omega-3s", "Vitamin C foods", "Zinc", "Avoid trigger foods"] },
-          { name: "Sunspots / Solar lentigines", med: ["Nd:YAG laser", "IPL", "Cryotherapy", "Chemical peels"], ing: ["Hydroquinone", "Alpha arbutin", "Vitamin C", "Retinoids", "AHA", "SPF 50+"], diet: ["Antioxidant diet", "Vitamin E", "Green tea", "Tomatoes"] }
+          { name: "Melasma", med: ["Jessner Peels", "IPL", "Oral Tranexamic Acid", "Picosecond laser"], ing: ["Hydroquinone 4%", "Tranexamic acid 5%", "Kojic acid", "Azelaic acid 20%"], diet: ["Polyphenols", "Vitamin D", "Limit alcohol"] },
+          { name: "Post-inflammatory hyperpigmentation (PIH)", med: ["Chemical peels", "Microneedling", "Low-fluence laser", "LED light therapy"], ing: ["Niacinamide 10%", "Alpha arbutin 2%", "Kojic acid", "Vitamin C"], diet: ["Omega-3s", "Vitamin C foods", "Zinc"] },
+          { name: "Sunspots / Solar lentigines", med: ["Nd:YAG laser", "IPL", "Cryotherapy", "Chemical peels"], ing: ["Hydroquinone", "Alpha arbutin", "Vitamin C", "Retinoids"], diet: ["Antioxidant diet", "Vitamin E", "Green tea"] }
         ]
       },
       {
         cat: "Acne & Breakouts",
         concerns: [
-          { name: "Inflammatory acne (papules & pustules)", med: ["Blue light / PDT", "Salicylic peels", "Steroid shots", "Antibiotics", "Hormonal therapy"], ing: ["Benzoyl peroxide", "Salicylic acid", "Niacinamide", "Tea tree oil", "Adapalene", "Azelaic acid"], diet: ["Low-GI", "Reduce dairy", "Probiotics", "Spearmint tea", "Zinc"] }
+          { name: "Inflammatory acne", med: ["PDT therapy", "Salicylic peels", "Steroid shots", "Antibiotics"], ing: ["Benzoyl peroxide", "Salicylic acid", "Niacinamide", "Tea tree oil"], diet: ["Low-GI", "Reduce dairy", "Probiotics", "Spearmint tea"] },
+          { name: "Cystic acne", med: ["Isotretinoin", "Cortisone shots", "Hormonal therapy", "Laser therapy"], ing: ["Adapalene", "Azelaic acid", "Sulfur", "Niacinamide"], diet: ["Sugar-free", "Anti-inflammatory", "High-fiber"] }
         ]
       }
     ];
@@ -293,14 +333,19 @@
     const searchInput = document.getElementById('searchInput');
     const catScroll = document.getElementById('catScroll');
 
-    function init() { renderCategories(); renderConcerns(); searchInput.focus(); }
+    function init() { renderCategories(); renderConcerns(); }
 
     function renderCategories() {
-        const cats = ["All", ...Object.keys(CAT_COLORS).filter(c => RAW_DATA.some(g => g.cat === c))];
+        const cats = ["All", ...Object.keys(CAT_COLORS)];
         catScroll.innerHTML = cats.map(c => `<button class="cat-pill ${c === activeCat ? 'active' : ''}" onclick="filterByCat('${c}')">${c}</button>`).join('');
     }
 
-    function filterByCat(c) { activeCat = c; renderCategories(); renderConcerns(); grid.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function filterByCat(c) { 
+        activeCat = c; 
+        renderCategories(); 
+        renderConcerns(); 
+        grid.scrollTo({ top: 0, behavior: 'smooth' }); 
+    }
 
     function renderConcerns() {
         const query = searchInput.value.toLowerCase();
@@ -311,21 +356,15 @@
             return;
         }
 
-        grid.innerHTML = filtered.map(item => {
-            // Restore multiple carousel placeholders for EVERY card
-            const slides = `
-                <div class="carousel-item"></div>
-                <div class="carousel-item"></div>
-                <div class="carousel-item"></div>
-            `;
-
-            return `
+        grid.innerHTML = filtered.map(item => `
             <div class="concern-card" onclick="openGallery('${item.name.replace(/'/g, "\\'")}')">
                 <div class="card-header"><h3>${item.name}</h3></div>
                 
                 <div style="position:relative; flex-grow:1; display:flex; flex-direction:column;">
-                    <div class="card-carousel" onclick="event.stopPropagation()">
-                        ${slides}
+                    <div class="card-carousel" onscroll="updateDots(this)">
+                        <div class="carousel-item"></div>
+                        <div class="carousel-item"></div>
+                        <div class="carousel-item"></div>
                     </div>
                     <div class="carousel-dots-overlay">
                         <div class="feed-dot active"></div>
@@ -335,12 +374,17 @@
                 </div>
 
                 <div class="card-footer">
-                    <span class="cat-tag" style="background: ${CAT_COLORS[item.cat] || '#222'}20; color: ${CAT_COLORS[item.cat] || '#888'}">${item.cat}</span>
+                    <span class="cat-tag" style="background: ${CAT_COLORS[item.cat]}20; color: ${CAT_COLORS[item.cat]}">${item.cat}</span>
                     <div class="arrow-hint">Explore Results →</div>
                 </div>
             </div>
-            `;
-        }).join('');
+        `).join('');
+    }
+
+    function updateDots(carousel) {
+        const scrollIndex = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+        const dots = carousel.nextElementSibling.querySelectorAll('.feed-dot');
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === scrollIndex));
     }
 
     searchInput.addEventListener('input', renderConcerns);
@@ -352,54 +396,84 @@
         document.getElementById('overlayTitle').textContent = item.name;
         
         content.innerHTML = `
-            <div class="gallery-feed">
-                ${['Test Clinic A', 'Test Clinic B'].map(clinic => `
-                    <div class="clinic-post">
-                        <div class="clinic-post-header">
-                            <div class="clinic-avatar">${clinic.split(' ').pop()}</div>
-                            <span class="clinic-post-name">${clinic}</span>
-                        </div>
-                        <div class="ba-swiper">
-                            ${[1, 2, 3].map(() => `
-                                <div class="ba-item">
-                                    <div class="ba-half before"><span class="ba-label">Before</span></div>
-                                    <div class="ba-half after"><span class="ba-label">After</span></div>
-                                </div>
-                            `).join('')}
+            ${['Clinic A', 'Clinic B', 'Clinic C'].map(clinic => `
+                <div class="clinic-post">
+                    <div class="clinic-post-header">
+                        <div class="clinic-avatar">${clinic.charAt(clinic.length - 1)}</div>
+                        <span class="clinic-post-name">Test ${clinic}</span>
+                    </div>
+                    <div class="ba-swiper">
+                        <div class="ba-item">
+                            <div class="ba-half before"><span class="ba-label">Before</span></div>
+                            <div class="ba-half after"><span class="ba-label">After</span></div>
                         </div>
                     </div>
-                `).join('')}
-                <button class="view-protocol-btn" onclick="openProtocol('${item.name.replace(/'/g, "\\'")}')">View Clinical Protocol →</button>
-            </div>
+                </div>
+            `).join('')}
+            <button class="view-protocol-btn" onclick="openProtocol('${item.name.replace(/'/g, "\\'")}')">View Clinical Protocol →</button>
         `;
         
         overlay.style.display = 'block';
-        setTimeout(() => overlay.classList.add('active'), 10);
+        setTimeout(() => {
+            overlay.classList.add('active');
+            content.scrollTo({ top: 0 }); // Reset scroll to top
+        }, 10);
     }
 
     function openProtocol(name) {
         const item = DATA.find(d => d.name === name);
-        const content = document.getElementById('detailContent');
-        content.innerHTML = `
+        const overlay = document.getElementById('detail-overlay');
+        
+        // Check if protocol view already exists, if so remove it
+        const existing = document.getElementById('protocolView');
+        if (existing) existing.remove();
+
+        const protocolDiv = document.createElement('div');
+        protocolDiv.id = 'protocolView';
+        protocolDiv.className = 'protocol-view-container';
+        protocolDiv.innerHTML = `
             <div class="protocol-view">
-                <h1 class="protocol-title">${item.name}</h1>
-                <div class="protocol-panel"><div class="panel-header" onclick="togglePanel(this)"><h4>Medical Treatments</h4><span>${item.med.length}</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <h1 class="protocol-title">${item.name}</h1>
+                    <button class="back-btn" onclick="this.parentElement.parentElement.parentElement.remove()" style="margin-top:-5px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="protocol-panel">
+                    <div class="panel-header" onclick="togglePanel(this)"><h4>Medical Treatments</h4><span>${item.med.length}</span></div>
                     <div class="panel-body">${item.med.map(m => `<div class="protocol-item"><span class="item-name">${m.name}</span><p class="item-desc">${m.desc}</p></div>`).join('')}</div>
                 </div>
-                <div class="protocol-panel"><div class="panel-header" onclick="togglePanel(this)"><h4>Skincare Ingredients</h4><span>${item.ing.length}</span></div>
+                <div class="protocol-panel">
+                    <div class="panel-header" onclick="togglePanel(this)"><h4>Skincare Ingredients</h4><span>${item.ing.length}</span></div>
                     <div class="panel-body">${item.ing.map(i => `<div class="protocol-item"><span class="item-name">${i.name}</span><p class="item-desc">${i.desc}</p></div>`).join('')}</div>
                 </div>
-                <div class="protocol-panel"><div class="panel-header" onclick="togglePanel(this)"><h4>Dietary Protocols</h4><span>${item.diet.length}</span></div>
+                <div class="protocol-panel">
+                    <div class="panel-header" onclick="togglePanel(this)"><h4>Dietary Protocols</h4><span>${item.diet.length}</span></div>
                     <div class="panel-body">${item.diet.map(d => `<div class="protocol-item"><span class="item-name">${d.name}</span><p class="item-desc">${d.desc}</p></div>`).join('')}</div>
                 </div>
             </div>
         `;
-        document.getElementById('detail-overlay').scrollTo({ top: 0, behavior: 'smooth' });
+        overlay.appendChild(protocolDiv);
     }
 
-    function closeDetail() { const overlay = document.getElementById('detail-overlay'); overlay.classList.remove('active'); setTimeout(() => overlay.style.display = 'none', 300); }
-    function togglePanel(header) { header.nextElementSibling.classList.toggle('open'); }
-    function toggleSettings() { document.getElementById('settings-sheet').classList.toggle('active'); document.querySelector('.sheet-overlay').classList.toggle('active'); }
+    function closeDetail() { 
+        const overlay = document.getElementById('detail-overlay'); 
+        overlay.classList.remove('active'); 
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            const protocol = document.getElementById('protocolView');
+            if (protocol) protocol.remove();
+        }, 300); 
+    }
+
+    function togglePanel(header) { 
+        header.nextElementSibling.classList.toggle('open'); 
+    }
+
+    function toggleSettings() { 
+        document.getElementById('settings-sheet').classList.toggle('active'); 
+        document.querySelector('.sheet-overlay').classList.toggle('active'); 
+    }
 
     window.onload = init;
 </script>
