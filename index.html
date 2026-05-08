@@ -175,7 +175,7 @@
         .cat-tag { font-size: 11px; text-transform: uppercase; font-weight: 700; padding: 4px 12px; border-radius: 999px; }
         .arrow-hint { color: var(--text-muted); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
 
-        /* --- DETAIL OVERLAY (GALLERY) --- */
+        /* --- DETAIL OVERLAY (GALLERY / REELS) --- */
         #detail-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 2000;
@@ -187,7 +187,9 @@
             height: 64px;
             padding: 0 20px; 
             position: absolute; top: 0; width: 100%;
-            background: var(--bg); z-index: 100; 
+            background: rgba(13, 13, 13, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100; 
             display: flex; align-items: center; justify-content: space-between; 
             gap: 15px; 
             border-bottom: 1px solid var(--border); 
@@ -212,40 +214,47 @@
         }
 
         .gallery-feed { 
-            height: 100%;
+            height: 100dvh;
             overflow-y: scroll;
-            padding-top: 64px; /* Space for overlay header */
+            scroll-snap-type: y mandatory;
         }
 
-        /* Clinic Post Container */
+        /* Clinic Reel Container (Full screen post) */
         .clinic-post { 
+            height: 100dvh;
             width: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
             display: flex;
             flex-direction: column;
-            padding: 24px 0 0 0;
+            padding-top: 64px; /* Space for the overlay header */
             border-bottom: 1px solid var(--border);
         }
 
-        .clinic-post-header { padding: 0 20px 16px; display: flex; align-items: center; gap: 12px; }
+        .clinic-post-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
         .clinic-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 14px; }
         .clinic-post-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
         
         .ba-container {
+            flex-grow: 1;
             position: relative;
             width: 100%;
             display: flex;
             flex-direction: column;
+            padding: 0 10px 40px; /* Some breathing room from edges */
         }
 
-        /* Swipable carousel for Before and After */
+        /* Swipable carousel for Before and After within the Reel */
         .ba-swiper { 
             width: 100%;
-            aspect-ratio: 4 / 3;
+            flex-grow: 1;
             display: flex; 
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             background: #000;
-            border-top: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
         .ba-slide { 
@@ -254,38 +263,49 @@
             scroll-snap-align: start; 
             display: flex; 
             flex-direction: column; 
-            justify-content: flex-end; 
+            justify-content: center; 
             align-items: center; 
             position: relative; 
         }
-        .ba-slide.before { background: #0A0A0A; }
-        .ba-slide.after { background: #0E0E0E; }
+        .ba-slide.before { background: linear-gradient(135deg, #111, #000); }
+        .ba-slide.after { background: linear-gradient(135deg, #1a1a1a, #050505); }
         
+        .ba-slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.1;
+            background-image: radial-gradient(var(--accent) 0.5px, transparent 0.5px);
+            background-size: 10px 10px;
+        }
+
         .ba-label { 
             position: absolute; bottom: 20px; 
             font-size: 10px; font-weight: 800; 
             letter-spacing: 0.1em; color: var(--text-secondary); 
             text-transform: uppercase; 
-            background: rgba(0,0,0,0.6); 
-            padding: 4px 12px; 
-            border-radius: 4px;
+            background: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(4px);
+            padding: 6px 16px; 
+            border-radius: 999px;
+            border: 1px solid var(--border);
         }
 
         /* Dots to show current carousel position */
         .ba-pagination {
             display: flex;
             justify-content: center;
-            gap: 6px;
-            padding: 12px 0 24px;
+            gap: 8px;
+            padding: 20px 0 10px;
         }
         .ba-dot { 
-            width: 5px; 
-            height: 5px; 
+            width: 6px; 
+            height: 6px; 
             border-radius: 50%; 
             background: var(--border); 
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
-        .ba-dot.active { background: var(--accent); }
+        .ba-dot.active { background: var(--accent); transform: scale(1.3); }
 
         /* Medical View Overlay */
         .protocol-view-container {
@@ -451,7 +471,6 @@
         dots.forEach((dot, i) => dot.classList.toggle('active', i === scrollIndex));
     }
 
-    // New dot updater for clinic horizontal carousel
     function updateClinicDots(swiper) {
         const scrollIndex = Math.round(swiper.scrollLeft / swiper.offsetWidth);
         const dots = swiper.nextElementSibling.querySelectorAll('.ba-dot');
@@ -469,8 +488,7 @@
         document.getElementById('overlayTitle').textContent = item.name;
         protocolBtn.onclick = (e) => { e.stopPropagation(); openProtocol(item.name); };
         
-        // 5 Clinics with their own headers and swipable Before/After carousel
-        const clinics = ['Test Clinic A', 'Test Clinic B', 'Test Clinic C', 'Test Clinic D', 'Test Clinic E'];
+        const clinics = ['Clinic A', 'Clinic B', 'Clinic C', 'Clinic D', 'Clinic E'];
         
         content.innerHTML = clinics.map(clinic => `
             <div class="clinic-post">
