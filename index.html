@@ -31,6 +31,7 @@
             --font-ui: 'Inter', sans-serif;
             --font-heading: 'DM Serif Display', serif;
             --transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --gold: #FFD700;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -152,10 +153,7 @@
         .carousel-item::after { 
             content: 'Reference Case View'; 
             font-size: 10px; 
-            text-transform: uppercase; 
-            color: var(--text-muted); 
-            opacity: 0.6; 
-            letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--text-muted); opacity: 0.6; letter-spacing: 0.1em;
         }
 
         .carousel-dots-overlay {
@@ -231,9 +229,26 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .clinic-post-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+        .clinic-post-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+        .header-main-info { display: flex; align-items: center; gap: 12px; }
         .clinic-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: var(--bg); font-weight: 800; font-size: 14px; }
         .clinic-post-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+        
+        /* Star Rating Review Link */
+        .review-link { 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            cursor: pointer; 
+            background: var(--surface);
+            padding: 6px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
+        }
+        .review-link:active { transform: scale(0.95); }
+        .rating-num { font-size: 13px; font-weight: 800; color: var(--text-primary); }
+        .rating-stars-small { display: flex; color: var(--gold); font-size: 10px; letter-spacing: -1px; }
         
         .ba-container {
             flex-grow: 1;
@@ -250,7 +265,6 @@
             flex-grow: 1;
             display: flex; 
             overflow-x: auto;
-            /* Use mandatory snapping to ensure it stays on a slide */
             scroll-snap-type: x mandatory;
             background: #000;
             border-radius: var(--radius-lg);
@@ -262,7 +276,6 @@
         .ba-slide { 
             flex: 0 0 100%; 
             height: 100%; 
-            /* scroll-snap-stop: always ensures you can't skip past slides in one flick */
             scroll-snap-align: start; 
             scroll-snap-stop: always;
             display: flex; 
@@ -296,81 +309,64 @@
             border: 1px solid var(--border);
         }
 
-        /* Pagination dots */
-        .ba-pagination {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 0;
-        }
-        .ba-dot { 
-            width: 7px; 
-            height: 7px; 
-            border-radius: 50%; 
-            background: #2A2724; 
-            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0.4;
-        }
-        .ba-dot.active { 
-            background: var(--accent); 
-            transform: scale(1.3); 
-            opacity: 1;
-            box-shadow: 0 0 8px rgba(201, 149, 106, 0.3);
-        }
+        .ba-pagination { display: flex; justify-content: center; gap: 8px; padding: 12px 0; }
+        .ba-dot { width: 7px; height: 7px; border-radius: 50%; background: #2A2724; transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.4; }
+        .ba-dot.active { background: var(--accent); transform: scale(1.3); opacity: 1; box-shadow: 0 0 8px rgba(201, 149, 106, 0.3); }
 
-        /* --- OTHER CASES HORIZONTAL SCROLL --- */
-        .other-cases-section {
-            padding-bottom: 24px;
-        }
-        .other-cases-label {
-            padding: 0 20px 10px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
-        .other-cases-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 0 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-        .case-card {
-            flex: 0 0 110px;
-            aspect-ratio: 4/5;
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
+        .other-cases-section { padding-bottom: 24px; }
+        .other-cases-label { padding: 0 20px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+        .other-cases-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 20px; -webkit-overflow-scrolling: touch; }
+        .case-card { flex: 0 0 110px; aspect-ratio: 4/5; background: var(--surface); border-radius: var(--radius-md); border: 1px solid var(--border); overflow: hidden; flex-shrink: 0; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; }
         .case-card:active { transform: scale(0.95); }
         .case-card.active { border-color: var(--accent); border-width: 2px; }
 
-        .case-card-split {
-            display: flex;
-            height: 100%;
-            width: 100%;
-        }
+        .case-card-split { display: flex; height: 100%; width: 100%; }
         .case-half { flex: 1; height: 100%; position: relative; }
         .case-half.before { background: #111; border-right: 0.5px solid var(--border); }
         .case-half.after { background: #1a1a1a; }
-        .case-half::after {
-            content: 'B';
-            position: absolute;
-            bottom: 4px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 8px;
-            font-weight: 900;
-            color: var(--text-muted);
-            opacity: 0.5;
-        }
+        .case-half::after { content: 'B'; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); font-size: 8px; font-weight: 900; color: var(--text-muted); opacity: 0.5; }
         .case-half.after::after { content: 'A'; }
+
+        /* --- REVIEW OVERLAY (INSTAGRAM STYLE) --- */
+        #review-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 3000;
+            display: none; transform: translateY(100%); transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #review-overlay.active { display: block; transform: translateY(0); }
+        
+        .review-header {
+            position: sticky; top: 0; z-index: 10;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 24px 20px;
+        }
+        .review-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .dr-profile { display: flex; gap: 16px; }
+        .dr-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #e3b68f); border: 2px solid var(--border); flex-shrink: 0; }
+        .dr-info h2 { font-family: var(--font-heading); font-size: 24px; line-height: 1.1; margin-bottom: 4px; }
+        .dr-info p { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+        
+        .dr-certifications {
+            display: flex; gap: 8px; overflow-x: auto;
+            margin-top: 15px;
+        }
+        .cert-pill {
+            flex: 0 0 auto; padding: 6px 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border);
+            font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--accent); letter-spacing: 0.05em;
+        }
+
+        .review-feed { height: calc(100% - 180px); overflow-y: auto; padding: 20px; }
+        .review-feed-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; letter-spacing: 0.05em; }
+
+        .insta-comment { display: flex; gap: 12px; margin-bottom: 24px; animation: fadeIn 300ms ease forwards; }
+        .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--text-muted); font-size: 12px; }
+        .comment-content { flex: 1; }
+        .comment-top { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+        .username { font-size: 14px; font-weight: 700; }
+        .rating-stars { display: flex; gap: 2px; color: var(--gold); font-size: 10px; }
+        .comment-text { font-size: 14px; color: var(--text-primary); line-height: 1.4; margin-bottom: 6px; }
+        .comment-meta { display: flex; gap: 15px; font-size: 12px; color: var(--text-muted); font-weight: 600; }
 
         /* Protocol Overlay */
         .protocol-view-container {
@@ -417,6 +413,7 @@
 
 <div class="concern-grid" id="concernGrid"></div>
 
+<!-- MAIN GALLERY OVERLAY -->
 <div id="detail-overlay">
     <div class="overlay-header">
         <div class="header-left">
@@ -428,6 +425,11 @@
         <button id="protocolHeaderBtn" class="protocol-mini-btn">Protocol</button>
     </div>
     <div id="detailContent" class="gallery-feed"></div>
+</div>
+
+<!-- CLINIC REVIEW OVERLAY -->
+<div id="review-overlay">
+    <div id="reviewSheetContent" style="height:100%"></div>
 </div>
 
 <div class="sheet-overlay" onclick="toggleSettings()"></div>
@@ -475,6 +477,13 @@
             diet: c.diet.map(d => ({ name: d, desc: "Internal protocol to optimize health." }))
         }))
     );
+
+    const MOCK_REVIEWS = [
+        { user: "skin_enthusiast", rating: 5, text: "Absolutely changed my life. Dr. Sarah was so meticulous with the laser settings.", time: "2d" },
+        { user: "glow_seeker99", rating: 4, text: "Great results but the recovery time was slightly longer than expected. Staff was amazing though.", time: "1w" },
+        { user: "james_r", rating: 5, text: "I've tried everything for these scars. 3 sessions in and the improvement is 80%. Worth every penny.", time: "2w" },
+        { user: "muna_skincare", rating: 4, text: "Professional environment and clear expectations.", time: "1mo" }
+    ];
 
     const CAT_COLORS = { "Texture & Scarring": "#7C6AF5", "Pigmentation": "#E8A838", "Acne & Breakouts": "#E85D5D" };
     let activeCat = "All";
@@ -539,31 +548,12 @@
     function updateClinicDots(swiper) {
         const slideWidth = swiper.offsetWidth;
         if (slideWidth === 0) return;
-        
-        // Linear index of the current slide (0 to N-1)
-        const currentScroll = swiper.scrollLeft;
-        const slideIndex = Math.round(currentScroll / slideWidth);
-
-        // Transformation pair index (0, 1, 2...)
+        const slideIndex = Math.round(swiper.scrollLeft / slideWidth);
         const caseIndex = Math.floor(slideIndex / 2);
-        
-        // Local index within the pair (0 = Before, 1 = After)
         const isAfter = (slideIndex % 2 !== 0);
-        
         const post = swiper.closest('.clinic-post');
-        
-        // Update case thumbnails scroll highlighting
-        const caseCards = post.querySelectorAll('.case-card');
-        caseCards.forEach((card, i) => {
-            card.classList.toggle('active', i === caseIndex);
-        });
-
-        // Update the B/A status indicator (the 2 dots)
-        const baDots = swiper.nextElementSibling.querySelectorAll('.ba-dot');
-        baDots.forEach((dot, i) => {
-            // Dot 0 is active for Before (index 0), Dot 1 is active for After (index 1)
-            dot.classList.toggle('active', i === (isAfter ? 1 : 0));
-        });
+        post.querySelectorAll('.case-card').forEach((card, i) => card.classList.toggle('active', i === caseIndex));
+        post.querySelectorAll('.ba-dot').forEach((dot, i) => dot.classList.toggle('active', i === (isAfter ? 1 : 0)));
     }
 
     searchInput.addEventListener('input', renderConcerns);
@@ -583,17 +573,21 @@
         content.innerHTML = clinics.map((clinic, cIdx) => `
             <div class="clinic-post" id="clinic-post-${cIdx}">
                 <div class="clinic-post-header">
-                    <div class="clinic-avatar">${clinic.split(' ').pop()}</div>
-                    <span class="clinic-post-name">${clinic}</span>
+                    <div class="header-main-info">
+                        <div class="clinic-avatar">${clinic.split(' ').pop()}</div>
+                        <span class="clinic-post-name">${clinic}</span>
+                    </div>
+                    <div class="review-link" onclick="openReviewSheet('${clinic}', '${item.name.replace(/'/g, "\\'")}')">
+                        <span class="rating-num">4.9</span>
+                        <div class="rating-stars-small">★★★★★</div>
+                    </div>
                 </div>
                 <div class="ba-container">
                     <div class="ba-swiper" onscroll="updateClinicDots(this)">
                         ${Array.from({ length: totalCasesPerClinic }).map((_, i) => `
-                            <!-- Transformation ${i+1}: Before -->
                             <div class="ba-slide before" style="background: linear-gradient(135deg, hsl(${i * 40}, 20%, 10%), #000)">
                                 <span class="ba-label">Before</span>
                             </div>
-                            <!-- Transformation ${i+1}: After -->
                             <div class="ba-slide after" style="background: linear-gradient(135deg, hsl(${i * 40}, 30%, 15%), #050505)">
                                 <span class="ba-label">After</span>
                             </div>
@@ -621,18 +615,71 @@
         `).join('');
         
         overlay.style.display = 'block';
-        setTimeout(() => {
-            overlay.classList.add('active');
-            content.scrollTo({ top: 0 }); 
-        }, 10);
+        setTimeout(() => overlay.classList.add('active'), 10);
+    }
+
+    function openReviewSheet(clinic, concern) {
+        const overlay = document.getElementById('review-overlay');
+        const sheet = document.getElementById('reviewSheetContent');
+        const drName = "Dr. Sarah Chen, MD";
+        
+        sheet.innerHTML = `
+            <div class="review-header">
+                <div class="review-header-top">
+                    <div class="dr-profile">
+                        <div class="dr-avatar"></div>
+                        <div class="dr-info">
+                            <h2>${drName}</h2>
+                            <p>Lead Clinician at ${clinic}</p>
+                            <p style="color:var(--gold); margin-top:2px; font-weight:700;">★ 4.9 · Specialist in ${concern}</p>
+                        </div>
+                    </div>
+                    <button class="back-btn" onclick="closeReviewSheet()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="dr-certifications">
+                    <div class="cert-pill">Board Certified</div>
+                    <div class="cert-pill">AAAM Member</div>
+                    <div class="cert-pill">Clinical Fellow</div>
+                    <div class="cert-pill">Harvard Med</div>
+                </div>
+            </div>
+            <div class="review-feed">
+                <div class="review-feed-title">Reviews for ${concern}</div>
+                ${MOCK_REVIEWS.map(r => `
+                    <div class="insta-comment">
+                        <div class="user-avatar">${r.user[0].toUpperCase()}</div>
+                        <div class="comment-content">
+                            <div class="comment-top">
+                                <span class="username">${r.user}</span>
+                                <div class="rating-stars">${'★'.repeat(r.rating)}</div>
+                            </div>
+                            <p class="comment-text">${r.text}</p>
+                            <div class="comment-meta">
+                                <span>${r.time}</span>
+                                <span style="color:var(--accent)">Helpful?</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        overlay.style.display = 'block';
+        setTimeout(() => overlay.classList.add('active'), 10);
+    }
+
+    function closeReviewSheet() {
+        const overlay = document.getElementById('review-overlay');
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.style.display = 'none', 400);
     }
 
     function switchCase(card, clinicIdx, caseIdx) {
         const post = document.getElementById(`clinic-post-${clinicIdx}`);
         const swiper = post.querySelector('.ba-swiper');
-        // Calculate X position based on linear sequence: case index * 2 * slideWidth
-        const targetX = caseIdx * 2 * swiper.offsetWidth;
-        swiper.scrollTo({ left: targetX, behavior: 'smooth' });
+        swiper.scrollTo({ left: caseIdx * 2 * swiper.offsetWidth, behavior: 'smooth' });
     }
 
     function openProtocol(name) {
