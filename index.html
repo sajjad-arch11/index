@@ -317,8 +317,7 @@
             flex-grow: 1;
             position: relative;
             width: 100%;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             padding: 0 10px; 
         }
 
@@ -501,7 +500,7 @@
         .team-dr-role { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 
         /* Protocol Overlay */
-        .protocol-view-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; overflow-y: auto; padding: 20px; padding-top: 80px; }
+        .protocol-view-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 5000; overflow-y: auto; padding: 20px; padding-top: 80px; }
         .protocol-view { animation: fadeIn 0.4s ease; }
         .protocol-title { font-family: var(--font-heading); font-size: 32px; margin-bottom: 24px; line-height: 1.1; }
         .protocol-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; margin-bottom: 12px; overflow: hidden; }
@@ -552,7 +551,7 @@
             </button>
             <span class="overlay-title" id="overlayTitle">Gallery</span>
         </div>
-        <button id="protocolHeaderBtn" class="protocol-mini-btn">Protocol</button>
+        <!-- Protocol Button Removed from here -->
     </div>
     <div id="detailContent" class="gallery-feed"></div>
 </div>
@@ -826,10 +825,8 @@
         const item = DATA.find(d => d.name === name);
         const overlay = document.getElementById('detail-overlay');
         const content = document.getElementById('detailContent');
-        const protocolBtn = document.getElementById('protocolHeaderBtn');
         
         document.getElementById('overlayTitle').textContent = item.name;
-        protocolBtn.onclick = (e) => { e.stopPropagation(); openProtocol(item.name); };
         
         const clinics = Object.keys(CLINIC_PROFILES);
         const totalCasesPerClinic = 6;
@@ -959,14 +956,12 @@
         const clinic = CLINIC_PROFILES[consultState.clinic];
         const concernData = DATA.find(d => d.name === consultState.concern);
         
-        // Smart Treatment selection logic
-        // If sensitive, pick the first/mildest option. If severe/resilient, pick the laser/surgical options.
         let rec1, rec2;
         if (consultState.answers.sensitivity === "Highly Reactive (very sensitive)") {
-            rec1 = concernData.med[concernData.med.length - 1].name; // usually milder / led
+            rec1 = concernData.med[concernData.med.length - 1].name; 
             rec2 = concernData.med[concernData.med.length - 2].name;
         } else if (consultState.answers.severity === "Severe / Structural") {
-            rec1 = concernData.med[0].name; // usually higher intensity (CO2, etc)
+            rec1 = concernData.med[0].name; 
             rec2 = concernData.med[1].name;
         } else {
             rec1 = concernData.med[Math.floor(concernData.med.length / 2)].name;
@@ -975,7 +970,10 @@
         
         chat.innerHTML = `
             <div class="chat-bubble">
-                <span class="chat-name">${clinic.receptionist} @ ${consultState.clinic}</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <span class="chat-name" style="margin-bottom:0;">${clinic.receptionist} @ ${consultState.clinic}</span>
+                    <button class="protocol-mini-btn" onclick="openProtocol('${consultState.concern.replace(/'/g, "\\'")}')" style="padding: 6px 14px; font-size: 10px;">Protocol</button>
+                </div>
                 <p class="chat-msg">
                     Hello! I've received your notes regarding <strong>${consultState.concern}</strong>.
                     <br><br>
@@ -1140,7 +1138,6 @@
 
     function openProtocol(name) {
         const item = DATA.find(d => d.name === name);
-        const overlay = document.getElementById('detail-overlay');
         const existing = document.getElementById('protocolView');
         if (existing) existing.remove();
 
@@ -1169,7 +1166,7 @@
                 </div>
             </div>
         `;
-        overlay.appendChild(protocolDiv);
+        document.body.appendChild(protocolDiv); // Appending to body for max z-index layering
     }
 
     function closeDetail() { 
