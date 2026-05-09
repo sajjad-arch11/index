@@ -301,14 +301,17 @@
         .loader-ring { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 20px; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .receptionist-chat { display: none; animation: fadeIn 0.5s ease forwards; }
-        .chat-bubble { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 20px 20px 20px 0; margin-bottom: 20px; position: relative; }
-        .chat-name { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; display: block; }
-        .chat-msg { font-size: 15px; line-height: 1.5; color: var(--text-primary); }
+        .receptionist-chat { display: none; animation: fadeIn 0.5s ease forwards; height: 100%; display: none; flex-direction: column; justify-content: center; }
+        .chat-bubble { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 20px; margin-bottom: 20px; position: relative; width: 100%; }
+        .chat-name { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; display: block; letter-spacing: 0.1em; }
+        .chat-msg { font-size: 15px; line-height: 1.6; color: var(--text-primary); }
+        .chat-msg strong { color: var(--text-primary); font-weight: 700; }
+        .chat-msg em { font-style: italic; color: var(--text-secondary); }
 
-        .chat-actions { display: flex; flex-direction: column; gap: 12px; }
-        .chat-btn { background: var(--accent); color: var(--bg); border: none; padding: 16px; border-radius: 14px; font-weight: 700; font-size: 14px; cursor: pointer; }
-        .chat-btn-sec { background: var(--surface); color: var(--text-primary); border: 1px solid var(--border); padding: 16px; border-radius: 14px; font-weight: 600; font-size: 14px; cursor: pointer; }
+        .chat-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .chat-btn { background: var(--accent); color: var(--bg); border: none; padding: 18px; border-radius: 14px; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform 0.2s; }
+        .chat-btn-sec { background: var(--surface); color: var(--text-primary); border: 1px solid var(--border); padding: 18px; border-radius: 14px; font-weight: 600; font-size: 14px; cursor: pointer; transition: transform 0.2s; }
+        .chat-btn:active, .chat-btn-sec:active { transform: scale(0.98); }
 
         .ba-container {
             flex-grow: 1;
@@ -882,12 +885,15 @@
 
     // --- CONSULTATION FLOW LOGIC ---
     let consultState = { clinic: null, concern: null, step: 0, answers: {} };
-    const leadQuestions = [
-        { id: 'time', q: "How long has this concern been bothering you?", opts: ["Less than 6 months", "6 months to 2 years", "Over 2 years"] },
-        { id: 'previous', q: "Have you tried professional treatments before?", opts: ["None yet", "A few over-the-counter", "Multiple clinical sessions"] },
-        { id: 'urgency', q: "How soon are you looking to start your transformation?", opts: ["Just researching", "Within the month", "Immediately"] },
-        { id: 'budget', q: "What is your approximate budget for treatment?", opts: ["Under $1k", "$1k - $5k", "$5k+"] }
-    ];
+
+    function getLeadQuestions(concern) {
+        return [
+            { id: 'severity', q: `What best describes the current state of your ${concern}?`, opts: ["Mild / Early stage", "Moderate / Persistent", "Severe / Structural"] },
+            { id: 'sensitivity', q: "How would you describe your skin's sensitivity level?", opts: ["Resilient (rarely reacts)", "Standard (occasional redness)", "Highly Reactive (very sensitive)"] },
+            { id: 'urgency', q: "How soon are you looking to start your transformation?", opts: ["Immediately", "Within the month", "Just researching"] },
+            { id: 'experience', q: "Have you previously consulted a professional for this area?", opts: ["None yet", "A few times", "Multiple clinical sessions"] }
+        ];
+    }
 
     function startConsultation(clinic, concern) {
         event.stopPropagation();
@@ -903,15 +909,15 @@
         const fill = document.getElementById('leadProgressFill');
         const connecting = document.getElementById('leadConnecting');
         const chat = document.getElementById('leadReceptionist');
+        const questions = getLeadQuestions(consultState.concern);
 
-        // Reset visibility
         content.style.display = 'flex';
         connecting.style.display = 'none';
         chat.style.display = 'none';
 
-        if (consultState.step < leadQuestions.length) {
-            const current = leadQuestions[consultState.step];
-            fill.style.width = `${(consultState.step / leadQuestions.length) * 100}%`;
+        if (consultState.step < questions.length) {
+            const current = questions[consultState.step];
+            fill.style.width = `${(consultState.step / questions.length) * 100}%`;
             content.innerHTML = `
                 <h2 class="lead-question">${current.q}</h2>
                 <div class="lead-options">
@@ -943,7 +949,7 @@
 
         setTimeout(() => {
             connecting.style.display = 'none';
-            chat.style.display = 'block';
+            chat.style.display = 'flex';
             renderReceptionistChat();
         }, 1500);
     }
@@ -952,7 +958,20 @@
         const chat = document.getElementById('leadReceptionist');
         const clinic = CLINIC_PROFILES[consultState.clinic];
         const concernData = DATA.find(d => d.name === consultState.concern);
-        const treatments = concernData.med.slice(0, 2).map(m => m.name).join(' or ');
+        
+        // Smart Treatment selection logic
+        // If sensitive, pick the first/mildest option. If severe/resilient, pick the laser/surgical options.
+        let rec1, rec2;
+        if (consultState.answers.sensitivity === "Highly Reactive (very sensitive)") {
+            rec1 = concernData.med[concernData.med.length - 1].name; // usually milder / led
+            rec2 = concernData.med[concernData.med.length - 2].name;
+        } else if (consultState.answers.severity === "Severe / Structural") {
+            rec1 = concernData.med[0].name; // usually higher intensity (CO2, etc)
+            rec2 = concernData.med[1].name;
+        } else {
+            rec1 = concernData.med[Math.floor(concernData.med.length / 2)].name;
+            rec2 = concernData.med[Math.floor(concernData.med.length / 2) + 1].name;
+        }
         
         chat.innerHTML = `
             <div class="chat-bubble">
@@ -960,7 +979,7 @@
                 <p class="chat-msg">
                     Hello! I've received your notes regarding <strong>${consultState.concern}</strong>.
                     <br><br>
-                    Since you're looking to start <em>${consultState.answers.urgency.toLowerCase()}</em>, I've notified our lead clinician. We often recommend <strong>${treatments}</strong> for cases like yours.
+                    Since you're looking to start <em>${consultState.answers.urgency.toLowerCase()}</em>, I've notified our lead clinician. Based on your <em>${consultState.answers.severity.split(' ')[0].toLowerCase()}</em> profile, we often recommend <strong>${rec1}</strong> or <strong>${rec2}</strong> for cases like yours.
                     <br><br>
                     Would you like to hop on a quick 10-minute diagnostic call today?
                 </p>
