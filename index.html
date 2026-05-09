@@ -281,7 +281,7 @@
         }
         #lead-overlay.active { display: flex; transform: translateY(0); }
 
-        .lead-header { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
+        .lead-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .lead-progress-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; position: relative; overflow: hidden; }
         .lead-progress-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
 
@@ -301,14 +301,23 @@
         .loader-ring { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 20px; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .receptionist-chat { display: none; animation: fadeIn 0.5s ease forwards; height: 100%; display: none; flex-direction: column; justify-content: center; }
+        .receptionist-chat { display: none; animation: fadeIn 0.5s ease forwards; height: 100%; flex-direction: column; overflow-y: auto; padding-bottom: 20px; }
         .chat-bubble { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 20px; margin-bottom: 20px; position: relative; width: 100%; }
         .chat-name { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; display: block; letter-spacing: 0.1em; }
-        .chat-msg { font-size: 15px; line-height: 1.6; color: var(--text-primary); }
+        .chat-msg { font-size: 14px; line-height: 1.6; color: var(--text-primary); }
         .chat-msg strong { color: var(--text-primary); font-weight: 700; }
         .chat-msg em { font-style: italic; color: var(--text-secondary); }
 
-        .chat-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        /* Structured Chat Sections */
+        .chat-section { margin-bottom: 20px; padding-top: 15px; border-top: 1px solid var(--border); }
+        .chat-section:first-of-type { border-top: none; padding-top: 0; }
+        .chat-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; display: block; letter-spacing: 0.1em; }
+        .chat-list { list-style: none; margin-left: 0; }
+        .chat-list li { margin-bottom: 8px; position: relative; padding-left: 18px; color: var(--text-secondary); font-size: 13.5px; }
+        .chat-list li::before { content: '•'; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+        .chat-disclaimer { background: rgba(232, 93, 93, 0.05); border: 1px dashed rgba(232, 93, 93, 0.3); padding: 15px; border-radius: 12px; color: #E85D5D; font-size: 12px; font-weight: 500; line-height: 1.4; margin-top: 10px; }
+
+        .chat-actions { display: flex; flex-direction: column; gap: 12px; width: 100%; padding-bottom: 20px; }
         .chat-btn { background: var(--accent); color: var(--bg); border: none; padding: 18px; border-radius: 14px; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform 0.2s; }
         .chat-btn-sec { background: var(--surface); color: var(--text-primary); border: 1px solid var(--border); padding: 18px; border-radius: 14px; font-weight: 600; font-size: 14px; cursor: pointer; transition: transform 0.2s; }
         .chat-btn:active, .chat-btn-sec:active { transform: scale(0.98); }
@@ -468,10 +477,7 @@
         }
         .clinic-hero.collapsed {
             padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-align: left;
+            display: flex; align-items: center; gap: 15px; text-align: left;
         }
         .clinic-hero.collapsed .clinic-hero-avatar { width: 40px; height: 40px; margin: 0; font-size: 16px; border-width: 2px; }
         .clinic-hero.collapsed h1 { font-size: 18px; margin: 0; flex: 1; }
@@ -951,12 +957,10 @@
         `;
     }
 
-    // New functional handlers for Photo logic
     function setupPhotoInput() {
         const input = document.getElementById('skinPhotoInput');
         input.addEventListener('change', (e) => {
             if (e.target.files && e.target.files.length > 0) {
-                // Once file is picked, move forward
                 submitPhoto(true);
             }
         });
@@ -1018,16 +1022,69 @@
                     <span class="chat-name" style="margin-bottom:0;">${clinic.receptionist} @ ${consultState.clinic}</span>
                     <button class="protocol-mini-btn" onclick="openProtocol('${consultState.concern.replace(/'/g, "\\'")}')" style="padding: 6px 14px; font-size: 10px;">Protocol</button>
                 </div>
-                <p class="chat-msg">
-                    Hello! I've received your notes ${consultState.answers.photoAttached ? 'and photo ' : ''}regarding <strong>${consultState.concern}</strong>.
-                    <br><br>
-                    Since you're looking to start <em>${consultState.answers.urgency.toLowerCase()}</em>, I've notified our lead clinician. Based on your <em>${consultState.answers.severity.split(' ')[0].toLowerCase()}</em> profile, we often recommend <strong>${rec1}</strong> or <strong>${rec2}</strong> for cases like yours.
-                    <br><br>
-                    Would you like to hop on a quick 10-minute diagnostic call today?
+                
+                <div class="chat-msg" style="margin-bottom:20px;">
+                    Hello! I've received your assessment ${consultState.answers.photoAttached ? 'and photo ' : ''}for <strong>${consultState.concern}</strong>.
+                    Based on your <em>${consultState.answers.severity.toLowerCase()}</em> profile, we recommend a targeted approach using <strong>${rec1}</strong>.
+                </div>
+
+                <div class="chat-section">
+                    <span class="chat-label">Your Daily Routine Following Treatment</span>
+                    <ul class="chat-list">
+                        <li><strong>Morning:</strong> Use a pH-balanced gentle cleanser followed by a hydrating barrier serum. <strong>Essential:</strong> Broad-spectrum SPF 50+ to protect sensitized tissue.</li>
+                        <li><strong>Evening:</strong> Double cleanse to remove pollutants. Apply prescribed topical actives (sandwiched between moisturizer if irritation occurs).</li>
+                    </ul>
+                </div>
+
+                <div class="chat-section">
+                    <span class="chat-label">Skincare & Dietary Protocol</span>
+                    <ul class="chat-list">
+                        <li><strong>Key Actives:</strong> Focus on <em>${concernData.ing.slice(0, 3).map(i => i.name).join(', ')}</em> for structural repair.</li>
+                        <li><strong>Nutrition:</strong> Integrate <em>${concernData.diet.slice(0, 2).map(d => d.name).join(', ')}</em> to support internal recovery.</li>
+                    </ul>
+                </div>
+
+                <div class="chat-section">
+                    <span class="chat-label">Dos & Don'ts</span>
+                    <ul class="chat-list">
+                        <li><strong>Do:</strong> Patch test new products, maintain high water intake (2L+), and keep skin cool.</li>
+                        <li><strong>Don't:</strong> Pick or touch the treated area, use physical exfoliants (scrubs), or expose skin to direct midday sun.</li>
+                    </ul>
+                </div>
+
+                <div class="chat-section">
+                    <span class="chat-label">Expectations & Side Effects</span>
+                    <p class="chat-msg" style="color:var(--text-secondary);">
+                        Mild redness or "purging" is a sign of cellular turnover. To bypass these effects and ensure only positive results, introduce actives 2-3 times a week initially and always maintain a strong lipid barrier.
+                    </p>
+                </div>
+
+                <div class="chat-disclaimer">
+                    <strong>Disclaimer:</strong> This routine is for educational assessment. Please only begin this protocol after getting it formally endorsed by our clinical professional during your diagnostic call.
+                </div>
+            </div>
+            
+            <div class="chat-actions">
+                <button class="chat-btn" onclick="handleScheduleCall()">Confirm & Schedule Endorsement Call</button>
+            </div>
+        `;
+    }
+
+    function handleScheduleCall() {
+        const chat = document.getElementById('leadReceptionist');
+        chat.innerHTML = `
+            <div class="chat-bubble" style="text-align:center; padding: 40px 20px;">
+                <div style="width:60px; height:60px; background:var(--accent); border-radius:50%; margin: 0 auto 20px; display:flex; align-items:center; justify-content:center; color:var(--bg);">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <h2 class="protocol-title" style="font-size:24px; margin-bottom:10px;">Endorsement Confirmed</h2>
+                <p style="color:var(--text-secondary); font-size:14px; line-height:1.5;">
+                    Your personalized routine has been logged. We've scheduled your professional endorsement call with <strong>${consultState.clinic}</strong>. 
+                    Check your email for the diagnostic preparation steps.
                 </p>
             </div>
             <div class="chat-actions">
-                <button class="chat-btn" onclick="closeConsultation()">Schedule Call</button>
+                <button class="chat-btn" onclick="closeConsultation()">Done</button>
             </div>
         `;
     }
