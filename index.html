@@ -542,6 +542,9 @@
 
 <div class="concern-grid" id="concernGrid"></div>
 
+<!-- Hidden File Input for Functional Photo Upload -->
+<input type="file" id="skinPhotoInput" accept="image/*" capture="camera" style="display:none;">
+
 <!-- MAIN GALLERY OVERLAY -->
 <div id="detail-overlay">
     <div class="overlay-header">
@@ -551,7 +554,6 @@
             </button>
             <span class="overlay-title" id="overlayTitle">Gallery</span>
         </div>
-        <!-- Protocol Button Removed from here -->
     </div>
     <div id="detailContent" class="gallery-feed"></div>
 </div>
@@ -752,7 +754,7 @@
     const searchInput = document.getElementById('searchInput');
     const catScroll = document.getElementById('catScroll');
 
-    function init() { renderCategories(); renderConcerns(); }
+    function init() { renderCategories(); renderConcerns(); setupPhotoInput(); }
 
     function renderCategories() {
         const cats = ["All", ...Object.keys(CAT_COLORS)];
@@ -914,7 +916,7 @@
 
         if (consultState.step < questions.length) {
             const current = questions[consultState.step];
-            fill.style.width = `${(consultState.step / questions.length) * 100}%`;
+            fill.style.width = `${(consultState.step / (questions.length + 1)) * 100}%`;
             content.innerHTML = `
                 <h2 class="lead-question">${current.q}</h2>
                 <div class="lead-options">
@@ -923,9 +925,51 @@
                     `).join('')}
                 </div>
             `;
+        } else if (consultState.step === questions.length) {
+            renderPhotoStep();
         } else {
             finishConsultation();
         }
+    }
+
+    function renderPhotoStep() {
+        const content = document.getElementById('leadFlowContent');
+        const fill = document.getElementById('leadProgressFill');
+        const questions = getLeadQuestions(consultState.concern);
+        
+        fill.style.width = `${(questions.length / (questions.length + 1)) * 100}%`;
+        
+        content.innerHTML = `
+            <div style="text-align:center; margin-bottom:30px;">
+                <h2 class="lead-question" style="margin-bottom:12px;">Help us personalize your assessment</h2>
+                <p style="color:var(--text-secondary); font-size:15px; line-height:1.5;">Adding a photo of your ${consultState.concern.toLowerCase()} helps our clinical team provide a more tailored treatment recommendation.</p>
+            </div>
+            <div class="lead-options">
+                <button class="chat-btn" onclick="triggerPhotoUpload()" style="padding: 18px; border-radius: 14px; font-weight: 700;">Take / Upload Photo</button>
+                <button class="chat-btn-sec" onclick="submitPhoto(false)" style="padding: 18px; border-radius: 14px; font-weight: 600;">Skip for now</button>
+            </div>
+        `;
+    }
+
+    // New functional handlers for Photo logic
+    function setupPhotoInput() {
+        const input = document.getElementById('skinPhotoInput');
+        input.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                // Once file is picked, move forward
+                submitPhoto(true);
+            }
+        });
+    }
+
+    function triggerPhotoUpload() {
+        document.getElementById('skinPhotoInput').click();
+    }
+
+    function submitPhoto(attached) {
+        consultState.answers.photoAttached = attached;
+        consultState.step++;
+        renderConsultStep();
     }
 
     function submitLeadAnswer(id, val) {
@@ -975,7 +1019,7 @@
                     <button class="protocol-mini-btn" onclick="openProtocol('${consultState.concern.replace(/'/g, "\\'")}')" style="padding: 6px 14px; font-size: 10px;">Protocol</button>
                 </div>
                 <p class="chat-msg">
-                    Hello! I've received your notes regarding <strong>${consultState.concern}</strong>.
+                    Hello! I've received your notes ${consultState.answers.photoAttached ? 'and photo ' : ''}regarding <strong>${consultState.concern}</strong>.
                     <br><br>
                     Since you're looking to start <em>${consultState.answers.urgency.toLowerCase()}</em>, I've notified our lead clinician. Based on your <em>${consultState.answers.severity.split(' ')[0].toLowerCase()}</em> profile, we often recommend <strong>${rec1}</strong> or <strong>${rec2}</strong> for cases like yours.
                     <br><br>
@@ -984,7 +1028,6 @@
             </div>
             <div class="chat-actions">
                 <button class="chat-btn" onclick="closeConsultation()">Schedule Call</button>
-                <button class="chat-btn-sec" onclick="closeConsultation()">Send Photos First</button>
             </div>
         `;
     }
