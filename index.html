@@ -603,71 +603,119 @@
 <script>
     const RAW_DATA = [
       {
-        cat: "Texture & Scarring",
-        concerns: [
-          { name: "Acne Scars (Atrophic / Ice Pick / Boxcar / Rolling)", med: ["CO2 fractional laser", "Erbium laser resurfacing", "Microneedling RF (Morpheus8)", "Subcision", "TCA cross (ice pick)", "Dermal fillers", "Platelet-rich plasma (PRP)", "CROSS technique"], ing: ["Retinoids (tretinoin 0.025–0.1%)", "Bakuchiol", "Vitamin C (10–20%)", "Niacinamide 5–10%", "AHA (glycolic / lactic acid)", "Peptides (Matrixyl)", "Centella asiatica"], diet: ["Collagen peptide supplements", "Vitamin C-rich foods", "Zinc-rich foods", "Omega-3s", "Bone broth", "Avoid high-glycemic foods"] },
-          { name: "Hypertrophic Scars & Keloids", med: ["Intralesional corticosteroid injections", "Pulsed dye laser (PDL)", "Cryotherapy", "Surgical excision + steroid", "Silicone sheets / gel", "5-Fluorouracil injections"], ing: ["Silicone-based serums", "Onion extract (Allium cepa)", "Centella asiatica", "Vitamin E oil"], diet: ["Anti-inflammatory diet", "Vitamin C", "Reduce sugar", "Adequate protein intake"] },
-          { name: "Rough / Uneven Skin Texture", med: ["Microdermabrasion", "Chemical peels", "Dermaplaning", "Fractional laser resurfacing", "HydraFacial"], ing: ["AHA (glycolic 5–10%, lactic 5–12%)", "BHA (salicylic acid 1–2%)", "PHA (gluconolactone)", "Retinoids", "Urea 5–10%", "Niacinamide"], diet: ["Hydration (2–3L water daily)", "Vitamin A foods", "Biotin-rich foods", "Collagen-supporting foods"] },
-          { name: "Enlarged Pores", med: ["Fractional laser (non-ablative)", "Microneedling", "Chemical peels (salicylic)", "Botulinum toxin (microinjections)"], ing: ["Salicylic acid 0.5–2%", "Niacinamide 5–10%", "Retinoids", "Clay / kaolin", "Azelaic acid 10–20%", "Zinc"], diet: ["Low-dairy diet", "Low-glycemic index foods", "Zinc supplement", "Antioxidant-rich foods"] },
-          { name: "Keratosis Pilaris (KP)", med: ["Chemical peels (lactic, glycolic)", "Microdermabrasion", "Laser (PDL for redness)"], ing: ["Lactic acid 5–12%", "Urea 10–20%", "Glycolic acid", "Salicylic acid", "Retinoids", "Ceramide moisturizer"], diet: ["Omega-3 fatty acids", "Vitamin A foods", "Reduce dairy", "Hydration", "Vitamin D"] },
-          { name: "Milia", med: ["Manual extraction", "Dermaplaning", "Chemical peels", "Retinoid prescription"], ing: ["Retinoids", "AHA exfoliants", "Gentle enzyme exfoliants", "Avoid heavy occlusive creams"], diet: ["Ensure vitamin A adequacy", "Avoid excessive cholesterol-heavy diet"] },
-          { name: "Stretch Marks (Striae)", med: ["Fractional CO2 laser", "Fractional RF microneedling", "PRP", "Microneedling", "Carboxytherapy", "Excimer laser"], ing: ["Tretinoin (early red striae)", "Centella asiatica", "Hyaluronic acid", "Vitamin C", "Peptides", "Rosehip oil", "Bio-oil"], diet: ["Adequate protein intake", "Vitamin C", "Zinc", "Collagen peptides", "Stay hydrated", "Vitamin E"] },
-          { name: "Cellulite", med: ["Acoustic wave therapy (AWT)", "Subcision (Cellfina)", "Radiofrequency (Velashape)", "Endermologie", "Carboxytherapy", "Cryolipolysis"], ing: ["Caffeine topical", "Retinol", "Vitamin C", "Aminophylline", "Firming peptides"], diet: ["Reduce sodium", "Anti-inflammatory diet", "Increase fiber", "Omega-3s", "Hydration", "Reduce alcohol", "Collagen supplement"] }
-        ]
-      },
-      {
-        cat: "Pigmentation",
-        concerns: [
-          { name: "Melasma", med: ["Chemical peels (Jessner, TCA 10–15%)", "IPL (carefully)", "Tranexamic acid IV / oral", "Picosecond laser", "Mesotherapy"], ing: ["Hydroquinone 2–4%", "Tranexamic acid 2–5%", "Kojic acid 1–2%", "Azelaic acid 10–20%", "Alpha arbutin 2%", "Niacinamide 5–10%", "Vitamin C", "Retinoids", "Broad-spectrum SPF 50+"], diet: ["Anti-inflammatory diet", "Avoid phytoestrogenic foods", "Polyphenol-rich foods", "Vitamin D optimization", "Limit alcohol"] },
-          { name: "Post-Inflammatory Hyperpigmentation (PIH)", med: ["Chemical peels", "Microneedling", "Low-fluence Q-switched laser", "LED light therapy"], ing: ["Niacinamide 5–10%", "Alpha arbutin 2%", "Kojic acid", "Tranexamic acid", "Vitamin C", "Azelaic acid", "Retinoids", "Licorice root extract", "SPF 50+"], diet: ["Anti-inflammatory omega-3s", "Vitamin C foods", "Zinc", "Avoid acne trigger foods"] },
-          { name: "Sunspots / Solar Lentigines", med: ["Q-switched Nd:YAG laser", "IPL", "Cryotherapy", "Chemical peels"], ing: ["Hydroquinone", "Alpha arbutin", "Vitamin C", "Retinoids", "AHA exfoliants", "SPF 50+"], diet: ["Antioxidant-rich diet", "Vitamin E", "Green tea polyphenols", "Tomatoes (lycopene)"] },
-          { name: "Dark Circles (Periorbital Hyperpigmentation)", med: ["Tear trough filler", "Q-switched laser", "PRP injections", "Chemical peels", "Carboxytherapy"], ing: ["Vitamin C", "Niacinamide", "Caffeine", "Peptides", "Retinol (low conc.)", "Kojic acid"], diet: ["Iron-rich foods", "Reduce sodium", "Hydration", "Vitamin K foods", "Quality sleep protocol"] }
-        ]
-      },
-      {
         cat: "Acne & Breakouts",
         concerns: [
-          { name: "Comedonal Acne (Blackheads & Whiteheads)", med: ["Manual extraction", "Salicylic acid peels", "Microdermabrasion", "AHA / BHA peels"], ing: ["Salicylic acid 0.5–2%", "Adadapalene 0.1%", "Retinoids", "Benzoyl peroxide 2.5–5%", "Niacinamide", "AHA"], diet: ["Low-glycemic diet", "Reduce dairy", "Zinc supplement", "Green tea", "Probiotics"] },
-          { name: "Inflammatory Acne (Papules & Pustules)", med: ["Blue light / PDT", "Chemical peels (salicylic)", "Intralesional corticosteroid", "Oral antibiotics", "Oral contraceptives"], ing: ["Benzoyl peroxide 2.5–10%", "Salicylic acid", "Niacinamide", "Tea tree oil 5%", "Clindamycin", "Adadapalene", "Azelaic acid 15–20%"], diet: ["Anti-inflammatory diet", "Low-glycemic index foods", "Reduce dairy", "Probiotic-rich foods", "Spearmint tea", "Zinc", "Selenium"] },
-          { name: "Cystic / Nodular Acne", med: ["Oral isotretinoin (Rx)", "Intralesional triamcinolone", "Hormonal therapy", "Photodynamic therapy", "Clinical drainage"], ing: ["Adadapalene 0.3%", "Benzoyl peroxide", "Azelaic acid", "Clindamycin / erythromycin", "Gentle non-comedogenic moisturizer"], diet: ["Strict low-GI diet", "Elimination of dairy", "Omega-3 supplementation", "Spearmint tea 2x/day", "Saw palmetto", "Reduce alcohol"] },
-          { name: "Hormonal Acne", med: ["Spironolactone (Rx)", "Oral contraceptive pills", "Low-dose isotretinoin", "Chemical peels"], ing: ["Niacinamide", "Salicylic acid", "Azelaic acid 15–20%", "Zinc", "DIM (diindolylmethane)", "Adadapalene"], diet: ["Spearmint tea", "DIM supplement", "Avoid dairy & high-GI foods", "Omega-3 fatty acids", "Zinc supplement", "Seed cycling", "Reduce refined sugar"] },
-          { name: "Body Acne (Bacne, Chest, Shoulders)", med: ["Salicylic acid body peels", "Blue light therapy", "Oral antibiotics", "Benzoyl peroxide protocols"], ing: ["Benzoyl peroxide wash 5–10%", "Salicylic acid wash 2%", "Tea tree oil", "Alpha arbutin (for PIH)", "Niacinamide body lotion"], diet: ["Same as facial acne protocols", "Shower post-exercise", "Avoid synthetic fabrics"] },
-          { name: "Ingrown Hairs / Folliculitis", med: ["Laser hair removal", "Pulsed light (IPL)", "Chemical peels (salicylic)", "Intralesional steroid"], ing: ["Salicylic acid", "Glycolic acid", "Benzoyl peroxide", "Tea tree oil", "Niacinamide", "Topical clindamycin"], diet: ["Anti-inflammatory diet", "Probiotics", "Zinc", "Reduce sugar", "Vitamin C"] }
+          { name: "Inflammatory acne (papules & pustules)", med: ["Oral antibiotics", "Hormonal therapy", "Prescription retinoids", "Blue light therapy"], ing: ["Benzoyl peroxide", "Salicylic acid", "Niacinamide", "Azelaic acid"], diet: ["Low glycemic diet", "Reduce dairy intake", "Spearmint tea"] },
+          { name: "Comedonal acne (blackheads & whiteheads)", med: ["Clinical extractions", "HydraFacial", "Superficial chemical peels"], ing: ["Adapalene", "Salicylic acid (BHA)", "Glycolic acid (AHA)", "Retinol"], diet: ["Increase hydration", "Fiber-rich foods", "Zinc supplements"] },
+          { name: "Hormonal acne", med: ["Spironolactone", "Oral contraceptives", "Laser therapy"], ing: ["Niacinamide", "Azelaic acid", "Bakuchiol", "Zinc PCA"], diet: ["DIM supplements", "Omega-3 fatty acids", "Limit refined sugars"] },
+          { name: "Cystic / nodular acne", med: ["Oral Isotretinoin (Accutane)", "Corticosteroid injections", "PDT therapy"], ing: ["Gentle barrier repair", "Ceramides", "Hyaluronic acid"], diet: ["Strict anti-inflammatory diet", "No-dairy trial", "High-dose Zinc"] },
+          { name: "Body acne (back, chest, shoulders)", med: ["Prescription body washes", "Oral antibiotics", "Fractional laser for PIH"], ing: ["Benzoyl peroxide wash", "Salicylic acid spray", "Tea tree oil"], diet: ["Probiotic foods", "Increase water intake", "Limit whey protein"] },
+          { name: "Adult / late-onset acne (30+)", med: ["Tretinoin therapy", "Hormonal balancing", "Microneedling"], ing: ["Retinoids", "Peptides", "Niacinamide", "Lactic acid"], diet: ["Antioxidant-rich foods", "Collagen support", "Reduce alcohol"] }
         ]
       },
       {
-        cat: "Aging & Rejuvenation",
+        cat: "Texture & Scarring",
         concerns: [
-          { name: "Fine Lines & Wrinkles", med: ["Botulinum toxin", "Dermal fillers", "Fractional CO2 laser", "Radiofrequency (Thermage)", "Ultrasound (Ultherapy)", "Chemical peels", "PRP facial"], ing: ["Retinoids (tretinoin)", "Vitamin C", "Peptides (Matrixyl 3000)", "Hyaluronic acid", "Ceramides", "Coenzyme Q10", "Niacinamide"], diet: ["Collagen supplements (10g/day)", "Antioxidant-rich foods", "Omega-3 fatty acids", "Reduce sugar", "Polyphenols", "Vitamin E", "Hydration"] },
-          { name: "Skin Laxity & Sagging", med: ["Ultherapy (HIFU)", "Thermage", "Morpheus8", "Thread lift", "Surgical facelift", "Body contouring RF"], ing: ["Retinoids", "Peptides (SNAP-8)", "Vitamin C", "DMAE", "Coenzyme Q10", "Adenosine"], diet: ["High-protein diet", "Collagen peptides", "Vitamin C", "Avoid rapid weight loss", "Antioxidants", "Omega-3s"] },
-          { name: "Loss of Volume (Hollow Cheeks, Temples)", med: ["HA dermal fillers", "Sculptra", "Fat grafting", "Radiesse"], ing: ["Peptides", "Hyaluronic acid", "Vitamin C", "Retinoids"], diet: ["Adequate healthy fats", "Protein for tissue maintenance", "Collagen supplements", "Avoid crash dieting"] },
-          { name: "Neck & Decolletage Aging", med: ["Botulinum toxin", "HA fillers", "Ultherapy / HIFU", "Fractional laser", "Chemical peels"], ing: ["Retinoids", "Vitamin C", "Niacinamide", "SPF 50+", "Peptides"], diet: ["Sun avoidance", "Daily SPF habit", "Wrinkle/laxity protocols"] },
-          { name: "Sun Damage / Photoaging", med: ["IPL", "Fractional CO2 laser", "Chemical peels", "PDT therapy", "Q-switched laser", "Microneedling"], ing: ["Mineral SPF 50+", "Vitamin C (AM)", "Niacinamide", "Retinoids (PM)", "Resveratrol", "Vitamin E", "Ferulic acid"], diet: ["Lycopene-rich foods", "Astaxanthin supplement", "Polyphenols", "Vitamin C", "Omega-3s", "Avoid smoking & alcohol"] }
+          { name: "Post-inflammatory hyperpigmentation / PIH", med: ["Low-fluence laser", "Chemical peels (TCA/Glycolic)", "Microneedling"], ing: ["Tranexamic acid", "Alpha arbutin", "Vitamin C", "Kojic acid"], diet: ["Vitamins A & C", "Leafy greens", "Hydration"] },
+          { name: "Post-inflammatory erythema / PIE", med: ["Pulsed Dye Laser (PDL)", "IPL therapy", "Vascular laser"], ing: ["Centella asiatica", "Niacinamide", "Azelaic acid", "Panthenol"], diet: ["Quercetin-rich foods", "Anti-inflammatory fats", "Green tea"] },
+          { name: "Rolling acne scars", med: ["Subcision", "Microneedling RF", "Dermal fillers"], ing: ["Retinoids", "Copper peptides", "Growth factors"], diet: ["Collagen peptides", "Vitamin C", "Protein-rich foods"] },
+          { name: "Boxcar acne scars", med: ["Fractional CO2 laser", "Erbium laser", "Chemical reconstruction (CROSS)"], ing: ["Tretinoin", "Glycolic acid", "Peptides"], diet: ["Bone broth", "Silica supplements", "Zinc"] },
+          { name: "Rough / uneven skin texture", med: ["Microdermabrasion", "Professional dermaplaning", "Enzyme peels"], ing: ["Lactic acid", "PHA", "Urea", "Enzymes"], diet: ["Healthy fats (avocado/nuts)", "Hydration", "Berries"] },
+          { name: "Enlarged pores", med: ["Microneedling", "Carbon laser peel", "Clear + Brilliant laser"], ing: ["Niacinamide", "Salicylic acid", "Clay masks", "Zinc"], diet: ["Fiber", "Green tea", "Avoid greasy foods"] },
+          { name: "Ice pick acne scars", med: ["TCA CROSS", "Punch excision", "Punch grafting"], ing: ["Prescription retinoids", "High-strength AHAs"], diet: ["Amino acids", "Vitamin C", "Iron-rich foods"] },
+          { name: "Hypertrophic scars & keloids", med: ["Steroid injections", "Cryotherapy", "Silicone sheeting", "Vascular laser"], ing: ["Silicone gel", "Onion extract", "Vitamin E"], diet: ["Anti-inflammatory diet", "Adequate protein"] },
+          { name: "Stretch marks (striae)", med: ["Fractional CO2 laser", "Microneedling RF", "Carboxytherapy"], ing: ["Tretinoin (early stage)", "Centella asiatica", "Hyaluronic acid", "Shea butter"], diet: ["Collagen", "Vitamin E", "Zinc", "Stay hydrated"] }
         ]
       },
       {
-        cat: "Sensitive & Reactive",
+        cat: "Pigmentation & Discolouration",
         concerns: [
-          { name: "Rosacea", med: ["IPL", "Pulsed dye laser (PDL)", "Vascular laser (Nd:YAG)", "LED red / yellow light", "Low-level light (LLLT)"], ing: ["Azelaic acid 15–20%", "Niacinamide 4–10%", "Metronidazole (Rx)", "Ivermectin 1%", "Green tea extract", "Centella asiatica", "Ceramides", "Sulfur cleansers"], diet: ["Identify personal triggers", "Anti-inflammatory diet", "Probiotics", "Avoid high-histamine foods", "Omega-3s", "Quercetin-rich foods", "Stay cool"] },
-          { name: "Perioral Dermatitis", med: ["Oral antibiotics", "Topical metronidazole", "Sodium sulfacetamide"], ing: ["Avoid all topical steroids", "Azelaic acid", "Niacinamide", "Zinc", "Fragrance-free barrier creams", "Simple gentle cleanser"], diet: ["Probiotics", "Anti-inflammatory", "Reduce dairy", "Reduce sugar", "Identify food sensitivities"] },
-          { name: "Contact Dermatitis / Reactive Skin", med: ["Patch testing", "Topical corticosteroids (Rx)", "Tacrolimus / pimecrolimus", "LED therapy"], ing: ["Eliminate irritant", "Ceramide-rich barrier repair", "Colloidal oatmeal", "Centella asiatica", "Minimal ingredient products", "Petroleum jelly"], diet: ["Anti-inflammatory diet", "Avoid identified dietary allergens", "Quercetin supplement", "Probiotics", "Omega-3s"] },
-          { name: "Sensitive / Reactive Skin Barrier", med: ["LED yellow light", "Cryotherapy facials", "Oxygen facials"], ing: ["Ceramides (1, 3, 6-II)", "Niacinamide (4%)", "Hyaluronic acid", "Squalane", "Colloidal oatmeal", "Centella asiatica", "Panthenol (B5)", "Avoid alcohol/fragrance"], diet: ["Omega-3 fatty acids", "Evening primrose oil", "Probiotics", "Avoid inflammatory foods", "Adequate hydration", "Vitamin D"] },
-          { name: "Eczema / Atopic Dermatitis", med: ["Topical corticosteroids", "Tacrolimus / dupilumab", "Narrowband UVB phototherapy", "Wet wrap therapy", "Bleach bath protocol"], ing: ["Ceramide-rich emollients", "Colloidal oatmeal", "Petrolatum", "Shea butter", "Avoid sulfates/parabens", "Gentle soap-free cleansers", "Immunomodulators (Rx)"], diet: ["Elimination diet", "Probiotics", "Omega-3 supplementation", "Quercetin", "Avoid eggs/dairy/gluten", "Vitamin D", "Evening primrose oil"] },
-          { name: "Psoriasis", med: ["Narrowband UVB phototherapy", "Excimer laser", "Biologic injections", "Coal tar treatments", "Topical corticosteroids", "Calcipotriol"], ing: ["Coal tar (OTC)", "Salicylic acid (scale removal)", "Urea 10–40%", "Calcipotriol (Rx)", "Ceramide moisturizers", "Avoid skin trauma"], diet: ["Anti-inflammatory diet", "Omega-3 (high dose)", "Reduce alcohol completely", "Gluten-free", "Mediterranean diet", "Vitamin D", "Curcumin", "Reduce red meat"] },
-          { name: "Telangiectasia (Broken Capillaries)", med: ["Pulsed dye laser (PDL)", "Nd:YAG laser", "IPL", "Sclerotherapy (legs)", "Electrocautery"], ing: ["Vitamin K", "Niacinamide", "Arnica extract", "Centella asiatica", "SPF 50+", "Avoid temperature extremes"], diet: ["Vitamin C + bioflavonoids", "Quercetin", "Rutin supplement", "Reduce alcohol", "Omega-3s", "Avoid spicy foods"] }
+          { name: "Melasma", med: ["Hydroquinone (Rx)", "Picosecond laser", "Tranexamic acid (Oral/Topical)"], ing: ["Cysteamine", "Kojic acid", "Alpha arbutin", "Thiamidol"], diet: ["Folate-rich foods", "Anti-inflammatory", "Limit heat exposure"] },
+          { name: "Sunspots / solar lentigines", med: ["Q-Switched laser", "Cryotherapy", "IPL"], ing: ["Vitamin C", "Retinol", "Licorice root", "High SPF 50+"], diet: ["Lycopene (cooked tomatoes)", "Beta-carotene", "Green tea"] },
+          { name: "Uneven skin tone / dullness", med: ["HydraFacial", "Glow peels", "LED therapy (Red)"], ing: ["Niacinamide", "Vitamin C", "Mandelic acid", "Resveratrol"], diet: ["Citrus fruits", "Watermelon", "Omega-3s"] },
+          { name: "Dark circles (periorbital)", med: ["Tear trough fillers", "Vascular laser", "PRP therapy"], ing: ["Caffeine", "Vitamin K", "Peptides", "Retinol"], diet: ["Iron-rich foods", "Reduce sodium", "Vitamin B12"] },
+          { name: "Freckles & ephelides", med: ["Gentle laser toning", "Chemical peels", "IPL"], ing: ["Broad-spectrum SPF", "Vitamin C", "Niacinamide"], diet: ["Polyphenols", "Berries", "Pomegranate"] },
+          { name: "Vitiligo", med: ["Excimer laser", "NB-UVB phototherapy", "Topical calcineurin inhibitors"], ing: ["Pseudocatalase", "High SPF", "Antioxidants"], diet: ["Gluten-free trial", "Vitamin D", "B12 and Folic acid"] }
         ]
       },
       {
-        cat: "Specialized Care",
+        cat: "Ageing & Laxity",
         concerns: [
-          { name: "Chronic Dry Skin (Xerosis)", med: ["Hydrating HydraFacial", "Mesotherapy (HA)", "Profhilo (injectable)", "LED red light therapy"], ing: ["Hyaluronic acid", "Glycerin", "Ceramides", "Squalane", "Urea 5–10%", "Panthenol (B5)", "Shea butter", "Petrolatum"], diet: ["Omega-3 fatty acids", "Evening primrose oil", "Hydration (2–3L)", "Vitamin E", "Avocado", "Nuts & seeds"] },
-          { name: "Dehydration (Lack of Water Content)", med: ["Profhilo", "Mesotherapy", "HydraFacial", "Aquagold micro-channeling"], ing: ["Hyaluronic acid", "Glycerin", "Beta-glucan", "Aloe vera", "Centella asiatica", "Sodium PCA"], diet: ["Water intake optimization", "Electrolytes", "Avoid excess caffeine", "Hydrating foods", "Coconut water"] },
-          { name: "Oily / Seborrheic Skin", med: ["Salicylic acid peels", "Chemical peels", "PDT therapy", "Botulinum toxin (sebum control)", "Lasers"], ing: ["Niacinamide 5–10%", "Salicylic acid 0.5–2%", "Zinc PCA", "Azelaic acid", "Clay / kaolin", "Retinoids", "Non-comedogenic moisturizer"], diet: ["Low-GI diet", "Reduce dairy", "Reduce saturated fats", "Spearmint tea", "Zinc supplement", "Selenium"] },
-          { name: "Seborrheic Dermatitis", med: ["Antifungal treatments", "Selenium sulfide shampoo", "Zinc pyrithione shampoo", "Low-level light therapy", "Tacrolimus (Rx)"], ing: ["Ketoconazole 2%", "Zinc pyrithione", "Selenium sulfide", "Coal tar", "Salicylic acid (scale)", "Niacinamide", "Piroctone olamine"], diet: ["Anti-Candida / anti-fungal diet", "Reduce sugar & refined carbs", "Probiotic supplementation", "Omega-3s", "Reduce alcohol", "Biotin supplement"] },
-          { name: "Hyperhidrosis (Excessive Sweating)", med: ["Botulinum toxin injections", "Iontophoresis", "MiraDry", "Oral anticholinergics"], ing: ["Aluminium chloride 20% (Rx)", "OTC aluminium chloride 15%", "Glycopyrronium wipes (Rx)"], diet: ["Reduce caffeine", "Reduce spicy foods", "Reduce alcohol", "Magnesium supplement", "Sage tea", "Avoid triggers"] },
-          { name: "Body Odor (Bromhidrosis)", med: ["Botulinum toxin", "MiraDry", "Laser hair removal", "Surgical apocrine gland removal"], ing: ["Zinc-based deodorants", "Triclosan products", "Clinical antiperspirants", "Benzoyl peroxide wash"], diet: ["Reduce red meat", "Reduce sulfur-rich veg", "Reduce garlic / onion", "Chlorophyll foods", "Probiotics", "Zinc", "Magnesium"] },
-          { name: "Hair Loss / Androgenetic Alopecia", med: ["PRP scalp injections", "LLLT (helmet/cap)", "Hair transplant", "Microneedling (scalp)", "Minoxidil (topical Rx)", "Finasteride / dutasteride (Rx)", "Spironolactone (Rx)"], ing: ["Minoxidil 2–5%", "Caffeine topical", "Ketoconazole shampoo", "Rosemary oil", "Biotin + peptide scalp serums", "Redensyl", "Procapil"], diet: ["Iron supplement", "Biotin", "Zinc", "Vitamin D", "Protein (1.2–1.6g/kg)", "Collagen peptides", "Omega-3s", "Saw palmetto", "Pumpkin seed oil"] },
-          { name: "Dandruff / Scalp Seborrheic Dermatitis", med: ["Ketoconazole shampoo", "Zinc pyrithione shampoo", "Selenium sulfide shampoo", "Salicylic acid scalp treatment", "Coal tar shampoo"], ing: ["Ketoconazole 2%", "Zinc pyrithione", "Piroctone olamine", "Selenium sulfide", "Salicylic acid", "Coal tar", "Tea tree oil (5%)"], diet: ["Reduce sugar & refined carbs", "Probiotics", "Omega-3s", "Antioxidants", "Anti-fungal approach", "Reduce alcohol"] }
+          { name: "Fine lines & wrinkles", med: ["Neuromodulators (Botox)", "Fractional laser", "Microneedling"], ing: ["Retinoids", "Peptides", "Vitamin C", "Hyaluronic acid"], diet: ["Antioxidants", "Collagen", "Reduce sugar (anti-glycation)"] },
+          { name: "Skin laxity & sagging", med: ["Ultherapy (HIFU)", "Radiofrequency (Thermage)", "Thread lifts"], ing: ["Copper peptides", "DMAE", "Retinoids"], diet: ["High protein", "Vitamin C", "Amino acids"] },
+          { name: "Volume loss (cheeks, temples, lips)", med: ["HA Fillers", "Biostimulators (Sculptra)", "Fat grafting"], ing: ["Hydrating topicals", "Peptides"], diet: ["Healthy fats", "Adequate calories", "Hydration"] },
+          { name: "Under-eye hollows / tear trough", med: ["Dermal fillers", "Lower blepharoplasty", "PRP"], ing: ["Peptides", "Ceramides", "Hyaluronic acid"], diet: ["Iron", "Vitamin K", "Hydration"] },
+          { name: "Neck & décolletage ageing", med: ["Hyperdilute Radiesse", "Laser resurfacing", "HIFU"], ing: ["Retinol", "Vitamin C", "Peptides", "Rich emollients"], diet: ["Sun avoidance", "Antioxidants", "Vitamin E"] },
+          { name: "Hand ageing", med: ["Dermal fillers", "IPL for spots", "Sclerotherapy"], ing: ["Retinol", "SPF 50+", "Urea", "Ceramides"], diet: ["Biotin", "Calcium", "Omega fatty acids"] }
+        ]
+      },
+      {
+        cat: "Hair Loss & Scalp",
+        concerns: [
+          { name: "Androgenetic alopecia (male & female pattern)", med: ["Minoxidil (Rx)", "Finasteride", "PRP scalp injections", "Hair transplant"], ing: ["Caffeine", "Rosemary oil", "Peppermint oil", "Saw palmetto"], diet: ["Iron", "Zinc", "Biotin", "High protein"] },
+          { name: "Telogen effluvium (diffuse shedding)", med: ["Blood panel analysis", "PRP", "Clinical LLLT"], ing: ["Scalp serums", "Mild cleansers"], diet: ["Iron (Ferritin focus)", "Vitamin D", "Manage stress"] },
+          { name: "Dandruff / scalp seborrhoeic dermatitis", med: ["Antifungal Rx shampoo", "Steroid lotions", "Salicylic acid treatments"], ing: ["Ketoconazole", "Zinc pyrithione", "Selenium sulfide", "Coal tar"], diet: ["Reduce sugar", "Avoid yeast-heavy foods", "Probiotics"] },
+          { name: "Alopecia areata", med: ["Intralesional steroid injections", "JAK inhibitors", "Immunotherapy"], ing: ["Mild scalp care", "Anti-inflammatory topicals"], diet: ["Autoimmune protocol (AIP)", "Vitamin D", "Zinc"] },
+          { name: "Scalp psoriasis", med: ["UVB phototherapy", "Coal tar Rx", "Vitamin D analogues"], ing: ["Salicylic acid", "Urea", "Coconut oil", "Coal tar"], diet: ["Anti-inflammatory", "Gluten-free trial", "Omega-3s"] },
+          { name: "Hair thinning & low density", med: ["LLLT helmet", "Mesotherapy", "Microneedling"], ing: ["Biotin", "Procapil", "Redensyl", "Peptides"], diet: ["Silica", "Collagen", "Pumpkin seed oil"] },
+          { name: "Oily scalp & product buildup", med: ["Scalp detox treatments", "Clinical exfoliation"], ing: ["Salicylic acid", "Tea tree oil", "Apple cider vinegar", "Clarifying surfactants"], diet: ["Zinc", "Vitamin B6", "Hydration"] }
+        ]
+      },
+      {
+        cat: "Redness & Sensitivity",
+        concerns: [
+          { name: "Rosacea", med: ["V-Beam laser", "Topical Metronidazole", "Oral Doxycycline"], ing: ["Azelaic acid", "Niacinamide", "Sulfur", "Centella asiatica"], diet: ["Avoid spicy foods", "No alcohol triggers", "Limit hot drinks"] },
+          { name: "Sensitive / reactive skin barrier", med: ["LED therapy (Yellow)", "Clinical soothing facial"], ing: ["Ceramides", "Colloidal oatmeal", "Panthenol", "Squalane"], diet: ["Omega-3s", "Probiotics", "Water-rich foods"] },
+          { name: "Perioral dermatitis", med: ["Oral antibiotics (Rx)", "Topical Pimecrolimus"], ing: ["Zero-therapy (Minimalism)", "Gentle cleansers", "Squalane"], diet: ["Reduce SLS", "Avoid cinnamon/fluoride triggers", "Probiotics"] },
+          { name: "Contact / allergic dermatitis", med: ["Patch testing", "Topical steroids", "Oral antihistamines"], ing: ["Barrier creams", "Petrolatum", "Allergen-free topicals"], diet: ["Low-histamine foods", "Identify food allergens"] },
+          { name: "Facial flushing & erythema", med: ["Vascular laser", "Brimonidine gel (Rx)", "Beta-blockers"], ing: ["Soothing mists", "Niacinamide", "Green tea extract"], diet: ["Keep body temperature cool", "Limit histamine"] },
+          { name: "Telangiectasia / spider veins (face)", med: ["Nd:YAG laser", "Pulsed Dye Laser", "Electrocautery"], ing: ["Vitamin K", "Niacinamide", "High SPF"], diet: ["Vitamin C", "Bioflavonoids", "Avoid heat"] }
+        ]
+      },
+      {
+        cat: "Dryness, Hydration & Barrier",
+        concerns: [
+          { name: "Dehydration (transient)", med: ["Hydrating HydraFacial", "Mesotherapy (HA)"], ing: ["Hyaluronic acid", "Glycerin", "Sodium PCA", "Aloe vera"], diet: ["Electrolytes", "Water intake", "Cucumbers/Celery"] },
+          { name: "Chronic dry skin / xerosis", med: ["Lactic acid peels", "Clinical emollients"], ing: ["Ceramides", "Urea", "Shea butter", "Lanolin"], diet: ["Healthy fats", "Omega-3 capsules", "Avocados"] },
+          { name: "Eczema / atopic dermatitis", med: ["Dupixent (Biologic)", "Topical JAK inhibitors", "UVB light"], ing: ["Colloidal oatmeal", "Ceramides", "Petrolatum", "Filaggrin-support"], diet: ["Elimination diet", "Vitamin D", "Omega-3s"] },
+          { name: "Compromised skin barrier", med: ["LED Yellow light", "Clinical recovery facial"], ing: ["Panthenol", "Ceramides", "Cholesterol", "Squalane"], diet: ["Increase amino acids", "Hydration", "Vitamin B"] },
+          { name: "Ichthyosis (inherited dry skin)", med: ["High-strength urea Rx", "Oral retinoids"], ing: ["Urea 10-40%", "Lactic acid", "Salicylic acid", "Rich occlusives"], diet: ["High hydration", "Essential fatty acids"] }
+        ]
+      },
+      {
+        cat: "Oiliness & Sebum Control",
+        concerns: [
+          { name: "Oily / seborrheic skin", med: ["Salicylic peels", "Botox for pores", "Sebum-control lasers"], ing: ["Niacinamide", "Salicylic acid", "Zinc PCA", "Green tea"], diet: ["Zinc", "Vitamin A", "Limit dairy"] },
+          { name: "Facial seborrhoeic dermatitis", med: ["Ketoconazole cream", "Mild steroids", "Calcineurin inhibitors"], ing: ["Sulfur", "Zinc pyrithione", "Niacinamide"], diet: ["Reduce yeast/sugar", "Manage stress"] },
+          { name: "Combination skin (T-zone oiliness)", med: ["Zoned chemical peels"], ing: ["Hyaluronic acid (dry zones)", "Salicylic acid (oily zones)"], diet: ["Balanced nutrition", "Hydration"] }
+        ]
+      },
+      {
+        cat: "Sun & Environmental Damage",
+        concerns: [
+          { name: "Sun damage / photoaging", med: ["Fractional laser", "IPL", "Photodynamic therapy (PDT)"], ing: ["Retinoids", "Vitamin C", "DNA repair enzymes", "SPF 50+"], diet: ["Astaxanthin", "Lycopene", "Green tea"] },
+          { name: "Actinic keratosis (pre-cancerous)", med: ["Cryotherapy", "Efudix (5-FU) cream", "PDT", "Surgical curettage"], ing: ["High SPF", "DNA repair topicals"], diet: ["Antioxidant-rich", "Cruciferous vegetables"] },
+          { name: "Pollution & oxidative damage", med: ["Deep clinical cleansing", "Antioxidant infusion"], ing: ["Vitamin C", "Resveratrol", "Ferulic acid", "Ectoin"], diet: ["Polyphenols", "Berries", "Dark chocolate"] }
+        ]
+      },
+      {
+        cat: "Body & Specialised Concerns",
+        concerns: [
+          { name: "Keratosis pilaris (KP)", med: ["Professional exfoliation", "Laser hair removal (for severe cases)"], ing: ["Urea", "Lactic acid", "Salicylic acid", "Retinol"], diet: ["Omega-3s", "Vitamin A", "Hydration"] },
+          { name: "Cellulite", med: ["Subcision", "Acoustic Wave Therapy", "Radiofrequency"], ing: ["Caffeine", "Retinol", "Vitamin C"], diet: ["Reduce sodium", "Increase fiber", "Hydration"] },
+          { name: "Ingrown hairs / folliculitis", med: ["Laser hair removal", "Clinical drainage", "Chemical peels"], ing: ["Salicylic acid", "Benzoyl peroxide", "Glycolic acid"], diet: ["Anti-inflammatory", "Zinc"] },
+          { name: "Hyperhidrosis (excessive sweating)", med: ["Botox injections", "miraDry", "Iontophoresis"], ing: ["Aluminium chloride", "Antiperspirants"], diet: ["Reduce caffeine", "Limit spicy foods", "Sage tea"] },
+          { name: "Body odour / bromhidrosis", med: ["miraDry", "Antibiotic topicals"], ing: ["Zinc", "Chlorophyll", "Benzoyl peroxide wash"], diet: ["Probiotics", "Magnesium", "Limit sulfur-rich veg"] },
+          { name: "Body psoriasis", med: ["UVB light therapy", "Biologics", "Topical steroids"], ing: ["Coal tar", "Salicylic acid", "Vitamin D", "Urea"], diet: ["Gluten-free trial", "Omega-3s", "Turmeric"] },
+          { name: "Localised fat & body contouring", med: ["Cryolipolysis (CoolSculpting)", "Injectable lipolysis (Kybella)", "Liposuction"], ing: ["Firming topicals"], diet: ["Calorie management", "High fiber", "Hydration"] }
+        ]
+      },
+      {
+        cat: "Unwanted Hair",
+        concerns: [
+          { name: "Unwanted facial & body hair", med: ["Laser Hair Removal", "Electrolysis", "Vaniqa cream (Rx)"], ing: ["Inhibitory topicals"], diet: ["Manage insulin levels"] },
+          { name: "PCOS-related hirsutism", med: ["Spironolactone", "Metformin", "Laser therapy"], ing: ["Azelaic acid (for PIH)", "Niacinamide"], diet: ["Low GI", "Spearmint tea", "Inositol"] },
+          { name: "Razor bumps / pseudofolliculitis barbae", med: ["Laser hair removal", "Chemical peels", "Topical antibiotics"], ing: ["Salicylic acid", "Glycolic acid", "Niacinamide"], diet: ["Anti-inflammatory", "Hydration"] }
         ]
       }
     ];
@@ -747,12 +795,17 @@
     );
 
     const CAT_COLORS = { 
-        "Texture & Scarring": "#7C6AF5", 
-        "Pigmentation": "#E8A838", 
         "Acne & Breakouts": "#E85D5D",
-        "Aging & Rejuvenation": "#C9956A",
-        "Sensitive & Reactive": "#4CAF50",
-        "Specialized Care": "#2196F3"
+        "Texture & Scarring": "#7C6AF5", 
+        "Pigmentation & Discolouration": "#E8A838", 
+        "Ageing & Laxity": "#C9956A",
+        "Hair Loss & Scalp": "#2196F3",
+        "Redness & Sensitivity": "#E85D5D",
+        "Dryness, Hydration & Barrier": "#4CAF50",
+        "Oiliness & Sebum Control": "#2196F3",
+        "Sun & Environmental Damage": "#E8A838",
+        "Body & Specialised Concerns": "#C9956A",
+        "Unwanted Hair": "#7C6AF5"
     };
 
     let activeCat = "All";
